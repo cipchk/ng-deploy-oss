@@ -1,6 +1,6 @@
 import { experimental } from '@angular-devkit/core';
 
-export type NgAddType = 'qiniu' | 'upyun' | 'oss';
+export type NgAddType = 'qiniu' | 'upyun' | 'ali-oss';
 
 export interface NgAddOptions {
   project: string;

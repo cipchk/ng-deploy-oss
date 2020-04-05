@@ -1,7 +1,8 @@
-[![npm downloads](https://img.shields.io/npm/dt/cipchk/ng-deploy-oss?label=npm%20downloads)](https://www.npmjs.com/package/cipchk/ng-deploy-oss)
-[![npm (scoped)](https://img.shields.io/npm/v/cipchk/ng-deploy-oss)](https://www.npmjs.com/package/cipchk/ng-deploy-oss)
-[![Build Status](https://travis-ci.org/ngx-builders/netlify-builder.svg?branch=master)](https://travis-ci.org/nitishk72/netlify-builder)
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
+# @azure/ng-deploy
+
+[![npm](https://img.shields.io/npm/v/ng-deploy-oss)](https://www.npmjs.com/package/ng-deploy-oss)
+[![Build Status](https://dev.azure.com/devrel/chris-noring-test/_apis/build/status/Azure.ng-deploy-azure?branchName=master)](https://dev.azure.com/devrel/chris-noring-test/_build/latest?definitionId=19&branchName=master)
+[![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/MIT)
 
 ## **Deploy Angular apps to aliyun OSS, qiniu, upyun using the Angular CLI! 🚀**
 
@@ -11,7 +12,7 @@
 
 ### Steps:
 
-1. run ```ng add cipchk/ng-deploy-oss``` to add necessary dependencies.
+1. run `ng add cipchk/ng-deploy-oss` to add necessary dependencies.
 
 ```bash
 ng add ng-deploy-oss

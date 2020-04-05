@@ -97,24 +97,27 @@ export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: B
   const uploadToken = new qiniu.rs.PutPolicy({ scope: schema.bucket }).uploadToken(mac);
   const formUploader = new qiniu.form_up.FormUploader(config);
   const promises: Array<Promise<any>> = [];
-  readFiles(schema.outputPath, (filePath: string, key: string) => {
-    const p = new Promise((reslove, reject) => {
-      key = `${schema.prefix}${key}`;
-      const putExtra = new qiniu.form_up.PutExtra();
-      formUploader.putFile(uploadToken, key, filePath, putExtra, (respErr, respBody, respInfo) => {
-        if (respErr) {
-          reject(respErr);
-          return;
-        }
-        if (respInfo.statusCode != 200) {
-          reject(respBody);
-          return;
-        }
-        context.logger.info(`    Uploading "${filePath}" => "${key}`);
-        reslove();
+  readFiles({
+    dirPath: schema.outputPath,
+    cb: ({ filePath, key }) => {
+      const p = new Promise((reslove, reject) => {
+        key = `${schema.prefix}${key}`;
+        const putExtra = new qiniu.form_up.PutExtra();
+        formUploader.putFile(uploadToken, key, filePath, putExtra, (respErr, respBody, respInfo) => {
+          if (respErr) {
+            reject(respErr);
+            return;
+          }
+          if (respInfo.statusCode != 200) {
+            reject(respBody);
+            return;
+          }
+          context.logger.info(`    Uploading "${filePath}" => "${key}`);
+          reslove();
+        });
       });
-    });
-    promises.push(p);
+      promises.push(p);
+    },
   });
 
   context.logger.info(`😀 Start uploading files`);

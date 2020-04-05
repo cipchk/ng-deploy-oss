@@ -13,6 +13,5 @@ export const ENV_NAMES: EnvName[] = [
   { key: 'QINIU_SK', name: 'sk' },
   { key: 'QINIU_ZONE', name: 'zone' },
   { key: 'QINIU_BUCKET', name: 'bucket' },
-  { key: 'QINIU_KEY', name: 'key' },
   { key: 'QINIU_PREFIX', name: 'prefix' },
 ];
