@@ -4,6 +4,8 @@ import { join } from 'path';
 import * as rimraf from 'rimraf';
 
 const TEST = process.argv.includes('--test');
+const RELEASE = process.argv.includes('--release');
+const RELEASE_NEXT = process.argv.includes('--release-next');
 const src = (...args: string[]) => join(process.cwd(), 'src', ...args);
 const dest = (...args: string[]) => join(process.cwd(), 'dist', ...args);
 const destPath = dest('');
@@ -51,4 +53,15 @@ Promise.all([buildLibrary()])
     }
     return copy(destPath, testProjectPath);
   })
-  .then(() => console.log('Success'));
+  .then(() => {
+    const execSync = require('child_process').execSync;
+    const command = `npm publish dist --access public --ignore-scripts`;
+    if (RELEASE) {
+      execSync(command);
+    }
+    if (RELEASE_NEXT) {
+      execSync(`${command} --tag next`);
+    }
+
+    console.log('Success');
+  });

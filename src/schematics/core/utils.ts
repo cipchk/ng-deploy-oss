@@ -98,13 +98,12 @@ export function readFiles(dirPath: string, cb: (filePath: string, key: string) =
   fn(dirPath);
 }
 
-export async function input(message: string, required = true): Promise<string> {
+export async function input(message: string): Promise<string> {
   const { ok } = await prompt<{ ok: any }>([
     {
       type: 'input',
       name: 'ok',
       message,
-      validate: val => (required && !val ? false : true),
     },
   ]);
   return ok;

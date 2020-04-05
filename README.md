@@ -1,7 +1,4 @@
-[![npm downloads](https://img.shields.io/npm/dt/cipchk/ng-deploy-oss?label=npm%20downloads)](https://www.npmjs.com/package/cipchk/ng-deploy-oss)
-[![npm (scoped)](https://img.shields.io/npm/v/cipchk/ng-deploy-oss)](https://www.npmjs.com/package/cipchk/ng-deploy-oss)
-[![Build Status](https://travis-ci.org/ngx-builders/netlify-builder.svg?branch=master)](https://travis-ci.org/nitishk72/netlify-builder)
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
+[![npm](https://img.shields.io/npm/v/ng-deploy-oss)](https://www.npmjs.com/package/ng-deploy-oss)
 
 ## **Deploy Angular apps to aliyun OSS, qiniu, upyun using the Angular CLI! 🚀**
 
