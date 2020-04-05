@@ -1,0 +1,79 @@
+{
+  "name": "ng-deploy-oss",
+  "version": "0.0.1-alpha.1",
+  "description": "Deploy Angular apps to aliyun OSS, qiniu, upyun using the Angular CLI.",
+  "keywords": [
+    "schematics",
+    "angular",
+    "aliyun oss",
+    "qiniu",
+    "upyun",
+    "deploy"
+  ],
+  "author": {
+    "name": "cipchk",
+    "url": "https://www.zhihu.com/people/cipchk"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cipchk/ng-deploy-oss/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cipchk/ng-deploy-oss.git"
+  },
+  "homepage": "https://github.com/cipchk/ng-deploy-oss",
+  "main": "./schematics/index",
+  "builders": "./builders.json",
+  "schematics": "./collection.json",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:jest": "jest",
+    "test:jest:watch": "jest --watch",
+    "test:e2e": "./scripts/test.sh",
+    "test:coverage": "jest --coverage",
+    "build": "tsc scripts/build.ts; node ./scripts/build.js",
+    "release": "npm run build && cd dist && npm publish --access public --ignore-scripts",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json"
+  },
+  "dependencies": {
+    "@angular-devkit/architect": "^0.901.0",
+    "@angular-devkit/core": "^9.1.0",
+    "@angular-devkit/schematics": "^9.1.0",
+    "schematics-utilities": "^2.0.1",
+    "chalk": "^4.0.0",
+    "inquirer": "^7.1.0",
+    "inquirer-autocomplete-prompt": "^1.0.2",
+    "typescript": "~3.8.3",
+    "fs-extra": "^9.0.0",
+    "qiniu": "^7.3.0"
+  },
+  "devDependencies": {
+    "@schematics/angular": "^9.1.0",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.0",
+    "@types/inquirer": "6.5.0",
+    "@types/fs-extra": "^8.1.0",
+    "@types/rimraf": "^3.0.0",
+    "husky": "^4.2.3",
+    "jest": "^25.2.7",
+    "ts-jest": "^25.3.1",
+    "prettier": "^2.0.2",
+    "pretty-quick": "^2.0.1",
+    "conventional-changelog-cli": "^2.0.31",
+    "rimraf": "^3.0.2"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}

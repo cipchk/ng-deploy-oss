@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "id": "FirebaseDeploySchema",
+  "title": "Firebase Deploy",
+  "description": "Ng Deploy target options for Firebase.",
+  "properties": {
+    "noBuild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Skip build process during deployment."
+    }
+  },
+  "additionalProperties": true
+}

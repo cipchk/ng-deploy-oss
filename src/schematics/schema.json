@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "ng-deploy-oss-ng-add",
+  "title": "ng-deploy-oss Add Options Schema",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "type": {
+      "type": "string",
+      "description": "指定云类型",
+      "default": "qiniu",
+      "x-prompt": {
+        "message": "请选择云类型？",
+        "type": "list",
+        "items": [
+          {
+            "value": "qiniu",
+            "label": "七牛云"
+          },
+          {
+            "value": "upyun",
+            "label": "又拍云"
+          },
+          {
+            "value": "oss",
+            "label": "阿里云"
+          }
+        ]
+      }
+    }
+  },
+  "required": [],
+  "additionalProperties": true
+}

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.ngfactory.ts
+*.ngsummary.json
+.DS_Store
+yarn-error.log
+*.bak
+package-lock.json
+test/ng-build/**/yarn.lock
+coverage
+*.log
+api-*.json
+scripts/build.js

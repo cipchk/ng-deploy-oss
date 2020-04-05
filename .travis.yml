@@ -1,0 +1,17 @@
+language: node_js
+sudo: false
+
+addons:
+  chrome: stable
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: CANARY=true
+
+branches:
+  only: master # otherwise pull requests get built twice
+
+install: yarn
+
+script: yarn build && yarn test:all
