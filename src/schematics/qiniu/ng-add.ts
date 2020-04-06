@@ -11,7 +11,7 @@ export function ngAddQiniu(options: PluginOptions): Rule {
       type: options.ngAdd.type,
       ak: await input(`请输入 AccessKey：`),
       sk: await input(`请输入 SecretKey：`),
-      zone: await list(`所在机房支持：`, ZONES),
+      zone: await list(`所在机房：`, ZONES),
       bucket: await input(`请输入 Bucket：`),
       prefix: await input(MESSAGES.input_prefix),
       buildCommand: await input(MESSAGES.input_buildCommand),

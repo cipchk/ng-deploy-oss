@@ -55,6 +55,8 @@ export const ENV_NAMES: EnvName[] = [
   { key: 'ALIOSS_REGION', name: 'region' },
   { key: 'ALIOSS_AK', name: 'ak' },
   { key: 'ALIOSS_SK', name: 'sk' },
+  { key: 'ALIOSS_STSTOKEN', name: 'stsToken' },
   { key: 'ALIOSS_BUCKET', name: 'bucket' },
   { key: 'ALIOSS_PREFIX', name: 'prefix' },
+  { key: 'ALIOSS_BUILDCOMMAND', name: 'buildCommand' },
 ];
