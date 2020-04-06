@@ -3,18 +3,13 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-pr:
+trigger:
   - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: $(nodeVersion)
-    displayName: 'Install Node.js'
-
   - script: npm install && npm install -g @angular/cli
     displayName: 'Install dependencies'
 
