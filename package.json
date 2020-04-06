@@ -46,7 +46,9 @@
     "inquirer-autocomplete-prompt": "^1.0.2",
     "typescript": "~3.8.3",
     "fs-extra": "^9.0.0",
-    "qiniu": "^7.3.0"
+    "qiniu": "^7.3.0",
+    "upyun": "^3.4.1",
+    "ali-oss": "^6.5.1"
   },
   "devDependencies": {
     "@schematics/angular": "^9.1.0",
@@ -55,10 +57,11 @@
     "@types/inquirer": "6.5.0",
     "@types/fs-extra": "^8.1.0",
     "@types/rimraf": "^3.0.0",
+    "@types/ali-oss": "^6.0.4",
     "husky": "^4.2.3",
     "jest": "^25.2.7",
     "ts-jest": "^25.3.1",
-    "prettier": "^2.0.2",
+    "prettier": "^2.0.3",
     "pretty-quick": "^2.0.1",
     "conventional-changelog-cli": "^2.0.31",
     "rimraf": "^3.0.2"

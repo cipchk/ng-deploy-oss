@@ -2,6 +2,7 @@ import { chain, Rule, SchematicContext, Tree, SchematicsException } from '@angul
 import { NgAddOptions, PluginOptions } from './core/types';
 import { getProject } from './core/utils';
 import { ngAddQiniu } from './qiniu/ng-add';
+import { ngAddUpyun } from './upyun/ng-add';
 
 export const ngAdd = (options: NgAddOptions): Rule => {
   return (tree: Tree, context: SchematicContext) => {
@@ -17,6 +18,9 @@ export const ngAdd = (options: NgAddOptions): Rule => {
     switch (options.type) {
       case 'qiniu':
         rules.push(ngAddQiniu(opt));
+        break;
+      case 'upyun':
+        rules.push(ngAddUpyun(opt));
         break;
       default:
         throw new SchematicsException(`Invalid cloud type "${options.type}"`);

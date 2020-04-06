@@ -2,7 +2,7 @@ import { Tree, SchematicsException } from '@angular-devkit/schematics';
 import { experimental } from '@angular-devkit/core';
 import { addPackageJsonDependency, NodeDependencyType } from 'schematics-utilities';
 import { prompt } from 'inquirer';
-import { readdirSync, statSync } from 'fs-extra';
+import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
 import { join } from 'path';
 import { PluginOptions, EnvName } from './types';
 
@@ -82,8 +82,12 @@ export function fixEnvValues(options: { [key: string]: any }, envData: EnvName[]
   }
 }
 
-export function readFiles(dirPath: string, cb: (filePath: string, key: string) => void) {
-  const startLen = dirPath.length + 1;
+export function readFiles(options: {
+  dirPath: string;
+  cb: (res: { filePath: string; stream: ReadStream | null; key: string }) => void;
+  stream?: boolean;
+}) {
+  const startLen = options.dirPath.length + 1;
   const fn = (p: string) => {
     readdirSync(p).forEach(filePath => {
       const fullPath = join(p, filePath);
@@ -91,11 +95,26 @@ export function readFiles(dirPath: string, cb: (filePath: string, key: string) =
         fn(fullPath);
         return;
       }
-      cb(fullPath, fullPath.substr(startLen));
+      options.cb({
+        filePath: fullPath,
+        stream: options.stream === true ? createReadStream(fullPath) : null,
+        key: fullPath.substr(startLen),
+      });
     });
   };
 
-  fn(dirPath);
+  fn(options.dirPath);
+}
+
+export function normalizePath(...args: string[]): string {
+  if (args.length <= 1) return args.join('');
+  return args
+    .map((val, idx) => {
+      if (idx <= 0) return val;
+      if (val.startsWith('/')) return val.substr(1);
+      return val;
+    })
+    .join('/');
 }
 
 export async function input(message: string): Promise<string> {
