@@ -9,7 +9,7 @@ export function ngAddOSS(options: PluginOptions): Rule {
     const opt = {
       outputPath: options.outputPath,
       type: options.ngAdd.type,
-      region: await list(`请选择 OSS Region（见：https://help.aliyun.com/document_detail/31837.html，Region英文表示列值）：`, REGIONS),
+      region: await list(`请选择 OSS Region：`, REGIONS),
       ak: await input(`请输入 AccessKeyId：`),
       sk: await input(`请输入 AccessKeySecret：`),
       bucket: await input(`请输入 Bucket：`),
