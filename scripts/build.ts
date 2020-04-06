@@ -54,6 +54,7 @@ Promise.all([buildLibrary()])
     if (!TEST) {
       return Promise.resolve();
     }
+    console.log(`Test mode.`);
     const testProjectPath = join(process.cwd(), '../ng9/node_modules/ng-deploy-oss');
     if (existsSync(testProjectPath)) {
       rimraf.sync(testProjectPath);
