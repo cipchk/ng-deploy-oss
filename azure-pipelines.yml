@@ -10,6 +10,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+  - task: NodeTool
+    inputs:
+      versionSpec: $(nodeVersion)
+    displayName: 'Install Node.js'
+
   - script: npm install && npm install -g @angular/cli
     displayName: 'Install dependencies'
 
