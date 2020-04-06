@@ -15,7 +15,7 @@ steps:
       versionSpec: '12.14.1'
     displayName: 'Install Node.js'
 
-  - script: npm install && npm install -g @angular/cli
+  - script: npm install
     displayName: 'Install dependencies'
 
   - script: npm run build
