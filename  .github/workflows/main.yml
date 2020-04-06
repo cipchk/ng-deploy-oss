@@ -13,7 +13,12 @@ jobs:
         node-version: [12.x]
 
     steps:
-      - run: npm build
-      - run: npm run test:ci
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: npm build
+
+      - name: Test
         env:
           CI: true
+        run: npm run test:ci
