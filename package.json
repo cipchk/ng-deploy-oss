@@ -27,11 +27,8 @@
   "builders": "./builders.json",
   "schematics": "./collection.json",
   "scripts": {
-    "test": "jest --verbose",
-    "test:jest": "jest",
-    "test:jest:watch": "jest --watch",
-    "test:e2e": "./scripts/test.sh",
-    "test:coverage": "jest --coverage",
+    "test": "jest --watch",
+    "test:ci": "jest",
     "build": "tsc scripts/build.ts; node ./scripts/build.js",
     "release": "npm run build -- --release",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json"

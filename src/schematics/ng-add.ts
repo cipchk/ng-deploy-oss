@@ -27,6 +27,7 @@ export const ngAdd = (options: NgAddOptions): Rule => {
         rules.push(ngAddOSS(opt));
         break;
       default:
+        console.log('a');
         throw new SchematicsException(`Invalid cloud type "${options.type}"`);
     }
     return chain(rules)(tree, context);
