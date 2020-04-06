@@ -3,6 +3,7 @@ dist/
 *.ngfactory.ts
 *.ngsummary.json
 .DS_Store
+yarn.lock
 yarn-error.log
 *.bak
 package-lock.json
