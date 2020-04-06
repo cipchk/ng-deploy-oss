@@ -1,0 +1,19 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - run: npm build
+      - run: npm run test:ci
+        env:
+          CI: true
