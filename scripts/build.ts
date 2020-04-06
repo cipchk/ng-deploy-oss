@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { copy, copySync, writeFile, existsSync } from 'fs-extra';
+import { copy, copySync, writeFile, existsSync, readFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
 import * as rimraf from 'rimraf';
 
@@ -32,6 +32,13 @@ async function compileSchematics() {
   ]);
 }
 
+async function replaceVersionNumber() {
+  const pkg = await import(join(process.cwd(), 'package.json'));
+  const utilsPath = dest('schematics', 'core', 'utils.js');
+  const content = readFileSync(utilsPath, { encoding: 'utf8' }).replace(`VERSIONPLACEHOLDER`, `~${pkg.version}`);
+  writeFileSync(utilsPath, content);
+}
+
 async function buildLibrary() {
   if (existsSync(destPath)) {
     rimraf.sync(destPath);
@@ -43,7 +50,7 @@ async function buildLibrary() {
 }
 
 Promise.all([buildLibrary()])
-  .then(() => {
+  .then(async () => {
     if (!TEST) {
       return Promise.resolve();
     }
@@ -51,6 +58,7 @@ Promise.all([buildLibrary()])
     if (existsSync(testProjectPath)) {
       rimraf.sync(testProjectPath);
     }
+    await replaceVersionNumber();
     return copy(destPath, testProjectPath);
   })
   .then(() => {

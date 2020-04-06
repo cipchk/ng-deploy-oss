@@ -60,7 +60,7 @@ export function addDeployArchitect(tree: Tree, options: PluginOptions, deployOpt
   const workspacePath = getPath(tree);
   tree.overwrite(workspacePath, JSON.stringify(options.workspaceSchema, null, 2));
 
-  addPackageJsonDependency(tree, { type: NodeDependencyType.Dev, version: 'VERSION', name: 'ng-deploy-oss' });
+  addPackageJsonDependency(tree, { type: NodeDependencyType.Dev, version: 'VERSIONPLACEHOLDER', name: 'ng-deploy-oss' });
 }
 
 export function fixAdditionalProperties(options: { [key: string]: any }) {

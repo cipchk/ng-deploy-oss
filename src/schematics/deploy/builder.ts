@@ -4,6 +4,7 @@ import { DeployBuilderSchema } from '../core/types';
 import { fixAdditionalProperties } from '../core/utils';
 import { ngDeployQiniu } from '../qiniu/deploy';
 import { ngDeployUpyun } from '../upyun/deploy';
+import { ngDeployAliOSS } from '../ali-oss/deploy';
 
 async function build(schema: DeployBuilderSchema, context: BuilderContext) {
   context.logger.info(`🥶Executing ${schema.type} deploy...`);
@@ -68,6 +69,9 @@ export default createBuilder<any>(
         break;
       case 'upyun':
         await ngDeployUpyun(schema as any, context);
+        break;
+      case 'ali-oss':
+        await ngDeployAliOSS(schema as any, context);
         break;
       default:
         context.logger.error(`Invalid cloud type "${schema.type}"`);
