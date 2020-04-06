@@ -38,15 +38,15 @@ function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
 async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS) {
   return new Promise(async reslove => {
     context.logger.info(`🤣 Start checking pre-deleted files`);
-    const items = await client.list({ prefix: schema.prefix, 'max-keys': 1000 }, {});
-    if (items.objects.length === 0) {
+    const resp = await client.list({ prefix: schema.prefix, 'max-keys': 1000 }, {});
+    if (resp.objects == null || resp.objects.length === 0) {
       context.logger.info(`    No need to delete files`);
       reslove();
       return;
     }
-    context.logger.info(`    Check that you need to delete ${items.objects.length} files`);
+    context.logger.info(`    Check that you need to delete ${resp.objects.length} files`);
     const promises: Array<Promise<any>> = [];
-    for (const item of items.objects) {
+    for (const item of resp.objects) {
       promises.push(client.delete(item.name));
     }
     if (promises.length > 0) {
@@ -87,4 +87,8 @@ export async function ngDeployAliOSS(schema: AliOSSDeployBuilderSchema, context:
   });
   await clear(schema, context, client);
   await upload(schema, context, client);
+
+  context.logger.warn(
+    `📌注意：阿里云OSS在未绑定域名的情况下直接打开 index.html 会以下载的形式出现，如何设置静态网站托管请参考：https://help.aliyun.com/document_detail/31899.html`,
+  );
 }
