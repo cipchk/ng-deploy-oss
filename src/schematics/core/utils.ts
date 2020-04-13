@@ -98,7 +98,8 @@ export function readFiles(options: {
       options.cb({
         filePath: fullPath,
         stream: options.stream === true ? createReadStream(fullPath) : null,
-        key: fullPath.substr(startLen),
+        // 修复 window 下的分隔符会引起 %5C
+        key: fullPath.substr(startLen).replace(/\\/g, '/'),
       });
     });
   };
