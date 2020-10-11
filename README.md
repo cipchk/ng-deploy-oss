@@ -34,46 +34,46 @@ ng deploy
 
 ### 通用参数
 
-| 参数名         | 默认值  | 描述                                                    |
-| -------------- | ------- | ------------------------------------------------------- |
-| `noBuild`      | `false` | 是否不执行构建命令                                      |
-| `buildCommand` | `-`     | 自定义构建命令行                                        |
-| `baseHref`     | `-`     | 指定 `baseHref` 参数，赞同 `ng build --base-href=xx` 值 |
-| `preClean`     | `true`  | 是否预清除所有远程目录下的文件                          |
+| 参数名 | 默认值 | 描述 |
+|-----|-----|----|
+| `noBuild` | `false` | 是否不执行构建命令 |
+| `buildCommand` | `-` | 自定义构建命令行 |
+| `baseHref` | `-` | 指定 `baseHref` 参数，赞同 `ng build --base-href=xx` 值 |
+| `preClean` | `true` | 是否预清除所有远程目录下的文件 |
 
 ### 不同参数
 
 **阿里云 OSS**
 
-| 参数名         | 环境变量名            | 描述                                                                                                               |
-| -------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `region`       | `ALIOSS_REGION`       | OSS Region，完整列表请参考[OSS 开通 Region 和 Endpoint 对照表](https://help.aliyun.com/document_detail/31837.html) |
-| `ak`           | `ALIOSS_AK`           | 阿里云 AccessKeyId                                                                                                 |
-| `sk`           | `ALIOSS_SK`           | 阿里云 AccessKeySecret                                                                                             |
-| `stsToken`     | `ALIOSS_STSTOKEN`     | 阿里云 STS Token                                                                                                   |
-| `bucket`       | `ALIOSS_BUCKET`       | Bucket                                                                                                             |
-| `prefix`       | `ALIOSS_PREFIX`       | 路径前缀，如果不指定表示放在根目录下                                                                               |
-| `buildCommand` | `ALIOSS_BUILDCOMMAND` | 构建生产环境的 NPM 命令行（例如：`npm run build`），若为空表示自动根据 `angular.json` 构建生成环境                 |
+| 参数名 | 环境变量名 | 描述 |
+|-----|-------|----|
+| `region` | `ALIOSS_REGION` | OSS Region，完整列表请参考[OSS 开通 Region 和 Endpoint 对照表](https://help.aliyun.com/document_detail/31837.html) |
+| `ak` | `ALIOSS_AK` | 阿里云 AccessKeyId |
+| `sk` | `ALIOSS_SK` | 阿里云 AccessKeySecret |
+| `stsToken` | `ALIOSS_STSTOKEN` | 阿里云 STS Token |
+| `bucket` | `ALIOSS_BUCKET` | Bucket |
+| `prefix` | `ALIOSS_PREFIX` | 路径前缀，如果不指定表示放在根目录下 |
+| `buildCommand` | `ALIOSS_BUILDCOMMAND` | 构建生产环境的 NPM 命令行（例如：`npm run build`），若为空表示自动根据 `angular.json` 构建生成环境 |
 
 **七牛云**
 
-| 参数名         | 环境变量名           | 描述                                                                                               |
-| -------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
-| `ak`           | `QINIU_AK`           | 七牛云 AccessKey                                                                                   |
-| `sk`           | `QINIU_SK`           | 七牛云 SecretKey                                                                                   |
-| `zone`         | `QINIU_ZONE`         | 所在机房                                                                                           |
-| `bucket`       | `QINIU_BUCKET`       | Bucket                                                                                             |
-| `prefix`       | `QINIU_PREFIX`       | 路径前缀，如果不指定表示放在根目录下                                                               |
+| 参数名 | 环境变量名 | 描述 |
+|-----|-------|----|
+| `ak` | `QINIU_AK` | 七牛云 AccessKey |
+| `sk` | `QINIU_SK` | 七牛云 SecretKey |
+| `zone` | `QINIU_ZONE` | 所在机房 |
+| `bucket` | `QINIU_BUCKET` | Bucket |
+| `prefix` | `QINIU_PREFIX` | 路径前缀，如果不指定表示放在根目录下 |
 | `buildCommand` | `QINIU_BUILDCOMMAND` | 构建生产环境的 NPM 命令行（例如：`npm run build`），若为空表示自动根据 `angular.json` 构建生成环境 |
 
 **又拍云**
 
-| 参数名         | 环境变量名           | 描述                                                                                               |
-| -------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
-| `name`         | `UPYUN_NAME`         | 服务名称                                                                                           |
-| `operatorName` | `UPYUN_OPERATORNAME` | 操作员名称（确保可写入&可删除权限）                                                                |
-| `operatorPwd`  | `UPYUN_OPERATORPWD`  | 操作员密码                                                                                         |
-| `prefix`       | `UPYUN_PREFIX`       | 路径前缀，如果不指定表示放在根目录下                                                               |
+| 参数名 | 环境变量名 | 描述 |
+|-----|-------|----|
+| `name` | `UPYUN_NAME` | 服务名称 |
+| `operatorName` | `UPYUN_OPERATORNAME` | 操作员名称（确保可写入&可删除权限） |
+| `operatorPwd` | `UPYUN_OPERATORPWD` | 操作员密码 |
+| `prefix` | `UPYUN_PREFIX` | 路径前缀，如果不指定表示放在根目录下 |
 | `buildCommand` | `UPYUN_BUILDCOMMAND` | 构建生产环境的 NPM 命令行（例如：`npm run build`），若为空表示自动根据 `angular.json` 构建生成环境 |
 
 ### 使用环境变量
