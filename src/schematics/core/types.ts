@@ -16,11 +16,13 @@ export interface PluginOptions {
 
 export interface DeployBuilderSchema {
   type: NgAddType;
-  noBuild: boolean;
-  configuration: 'production';
-  buildCommand: string;
   outputPath: string;
+  configuration: 'production';
+  noBuild: boolean;
+  buildCommand: string;
   baseHref: string;
+  /** 是否预清除所有远程目录下的文件 */
+  preClean: boolean;
   '--'?: string[];
 }
 

@@ -1,7 +1,7 @@
 # ng-deploy-oss
 
 [![npm](https://img.shields.io/npm/v/ng-deploy-oss)](https://www.npmjs.com/package/ng-deploy-oss)
-[![Build Status](https://dev.azure.com/cipchk-github/ng-deploy-oss/_apis/build/status/cipchk.ng-deploy-oss?branchName=master)](https://dev.azure.com/cipchk-github/ng-deploy-oss/_build?branchName=master)
+![CI](https://github.com/cipchk/ng-deploy-oss/workflows/CI/badge.svg)
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/MIT)
 
 **使用 Angular CLI 发布 Angular 应用到阿里云 OSS、七牛云、又拍云 🚀**
@@ -22,7 +22,7 @@ cd hello-world
 ng add ng-deploy-oss
 ```
 
-> 支持阿里云 OSS、七牛云、又拍云三种云存储，不同的类型需要的参数不同，更多细节请参考[参数](#参数)。
+> 除 [通用参数](#通用参数) 以外，同时阿里云 OSS、七牛云、又拍云三种云存储，不同的类型需要的参数不同，更多细节请参考[不同参数](#不同参数)。
 
 3、部署
 
@@ -32,7 +32,16 @@ ng deploy
 
 ## 参数
 
-### 不同类型参数描述
+### 通用参数
+
+| 参数名         | 默认值  | 描述                                                    |
+| -------------- | ------- | ------------------------------------------------------- |
+| `noBuild`      | `false` | 是否不执行构建命令                                      |
+| `buildCommand` | `-`     | 自定义构建命令行                                        |
+| `baseHref`     | `-`     | 指定 `baseHref` 参数，赞同 `ng build --base-href=xx` 值 |
+| `preClean`     | `true`  | 是否预清除所有远程目录下的文件                          |
+
+### 不同参数
 
 **阿里云 OSS**
 
@@ -80,7 +89,7 @@ set ALIOSS_AK=prod
 export ALIOSS_AK=prod
 ```
 
-### 使用参数
+### 使用命令行
 
 命令行参数也可以改变其参数值，但它的优先级会低于环境变量方式，高于 `angular.json` 配置的信息。
 
@@ -88,6 +97,6 @@ export ALIOSS_AK=prod
 ng deploy --ak=prod
 ```
 
-### License
+## License
 
 The MIT License (see the [LICENSE](https://github.com/cipchk/ng-deploy-oss/blob/master/LICENSE) file for the full text)

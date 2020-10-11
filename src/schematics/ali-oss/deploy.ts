@@ -85,7 +85,9 @@ export async function ngDeployAliOSS(schema: AliOSSDeployBuilderSchema, context:
     stsToken: schema.stsToken,
     timeout: TIMEOUT,
   });
-  await clear(schema, context, client);
+  if (schema.preClean) {
+    await clear(schema, context, client);
+  }
   await upload(schema, context, client);
 
   context.logger.warn(

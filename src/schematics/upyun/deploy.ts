@@ -75,7 +75,9 @@ export async function ngDeployUpyun(schema: UpyunDeployBuilderSchema, context: B
   const service = new upyun.Service(schema.name, schema.operatorName, schema.operatorPwd);
   const client = new upyun.Client(service);
   // 删除文件
-  await clear(schema, context, client);
+  if (schema.preClean) {
+    await clear(schema, context, client);
+  }
   // 上传文件
   await upload(schema, context, client);
 }
