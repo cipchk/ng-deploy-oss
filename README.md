@@ -1,7 +1,7 @@
 # ng-deploy-oss
 
 [![npm](https://img.shields.io/npm/v/ng-deploy-oss)](https://www.npmjs.com/package/ng-deploy-oss)
-[![Build Status](https://dev.azure.com/cipchk-github/ng-deploy-oss/_apis/build/status/cipchk.ng-deploy-oss?branchName=master)](https://dev.azure.com/cipchk-github/ng-deploy-oss/_build?branchName=master)
+![CI](https://github.com/cipchk/ng-deploy-oss/workflows/CI/badge.svg)
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/MIT)
 
 **使用 Angular CLI 发布 Angular 应用到阿里云 OSS、七牛云、又拍云 🚀**
