@@ -91,8 +91,10 @@ export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: B
   const mac = new qiniu.auth.digest.Mac(schema.ak, schema.sk);
   const config = new qiniu.conf.Config({ zone: qiniu.zone[schema.zone] });
   // 删除文件
-  const bucketManager = new qiniu.rs.BucketManager(mac, config);
-  await clear(schema, context, bucketManager);
+  if (schema.preClean) {
+    const bucketManager = new qiniu.rs.BucketManager(mac, config);
+    await clear(schema, context, bucketManager);
+  }
   // 上传文件
   const uploadToken = new qiniu.rs.PutPolicy({ scope: schema.bucket }).uploadToken(mac);
   const formUploader = new qiniu.form_up.FormUploader(config);

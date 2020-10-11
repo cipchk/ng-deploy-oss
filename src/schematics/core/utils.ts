@@ -5,6 +5,7 @@ import { prompt } from 'inquirer';
 import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
 import { join } from 'path';
 import { PluginOptions, EnvName } from './types';
+import { MESSAGES } from './config';
 
 export function getPath(tree: Tree): string {
   const possibleFiles = ['/angular.json', '/.angular.json'];
@@ -47,7 +48,15 @@ export function getProject(tree: Tree, projectName: string) {
   return { name, workspace, outputPath: project.architect.build.options.outputPath };
 }
 
-export function addDeployArchitect(tree: Tree, options: PluginOptions, deployOptions: { [key: string]: any }) {
+export async function addDeployArchitect(tree: Tree, options: PluginOptions, deployOptions: { [key: string]: any }) {
+  deployOptions = {
+    outputPath: options.outputPath,
+    type: options.ngAdd.type,
+    ...deployOptions,
+    prefix: await input(MESSAGES.input_prefix),
+    buildCommand: await input(MESSAGES.input_buildCommand),
+    preClean: await confirm(MESSAGES.input_preDeletedFiles, true),
+  };
   Object.keys(deployOptions)
     .filter(key => deployOptions[key] == null || deployOptions[key] === '')
     .forEach(key => delete deployOptions[key]);

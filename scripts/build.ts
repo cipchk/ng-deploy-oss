@@ -51,15 +51,16 @@ async function buildLibrary() {
 
 Promise.all([buildLibrary()])
   .then(async () => {
+    await replaceVersionNumber();
     if (!TEST) {
       return Promise.resolve();
     }
-    console.log(`Test mode.`);
-    const testProjectPath = join(process.cwd(), '../ng9/node_modules/ng-deploy-oss');
+    const projectName = `ng10-strict`;
+    console.info(`Test mode. Copy to [${projectName}] project`);
+    const testProjectPath = join(process.cwd(), `../${projectName}/node_modules/ng-deploy-oss`);
     if (existsSync(testProjectPath)) {
       rimraf.sync(testProjectPath);
     }
-    await replaceVersionNumber();
     return copy(destPath, testProjectPath);
   })
   .then(() => {
