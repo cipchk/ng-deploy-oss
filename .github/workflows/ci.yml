@@ -3,7 +3,7 @@ name: CI
 on: push
 
 jobs:
-  generator:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
