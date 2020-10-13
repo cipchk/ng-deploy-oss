@@ -43,7 +43,7 @@ async function buildLibrary() {
   if (existsSync(destPath)) {
     rimraf.sync(destPath);
   }
-  ['package.json', 'README.md', 'CHANGELOG.md'].forEach(fileName => {
+  ['package.json', 'README.md'].forEach(fileName => {
     copySync(join(process.cwd(), fileName), dest(fileName));
   });
   await Promise.all([compileSchematics(), await fixPackage()]);

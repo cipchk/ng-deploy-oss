@@ -12,7 +12,8 @@ interface AliOSSDeployBuilderSchema extends DeployBuilderSchema {
   bucket: string;
   prefix: string;
 }
-const TIMEOUT = 1000 * 10;
+// 30分钟
+const TIMEOUT = 1000 * 60 * 30;
 
 function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
   fixEnvValues(schema, ENV_NAMES);

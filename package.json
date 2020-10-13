@@ -31,8 +31,7 @@
     "test:ci": "jest",
     "build": "tsc scripts/build.ts; node ./scripts/build.js",
     "build:test": "npm run build -- --test",
-    "release": "npm run changelog && npm run build -- --release",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json"
+    "release": "npm run build -- --release"
   },
   "dependencies": {
     "@angular-devkit/architect": "^0.1001.0",
@@ -59,7 +58,6 @@
     "jest": "^25.2.7",
     "ts-jest": "^25.3.1",
     "prettier": "^2.1.2",
-    "conventional-changelog-cli": "^2.1.0",
     "rimraf": "^3.0.2"
   },
   "jest": {
