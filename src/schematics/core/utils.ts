@@ -1,6 +1,6 @@
 import { Tree, SchematicsException } from '@angular-devkit/schematics';
 import { experimental } from '@angular-devkit/core';
-import { addPackageJsonDependency, NodeDependencyType } from 'schematics-utilities';
+// import { addPackageJsonDependency, NodeDependencyType } from 'schematics-utilities';
 import { prompt } from 'inquirer';
 import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
 import { join } from 'path';
@@ -69,7 +69,7 @@ export async function addDeployArchitect(tree: Tree, options: PluginOptions, dep
   const workspacePath = getPath(tree);
   tree.overwrite(workspacePath, JSON.stringify(options.workspaceSchema, null, 2));
 
-  addPackageJsonDependency(tree, { type: NodeDependencyType.Dev, version: 'VERSIONPLACEHOLDER', name: 'ng-deploy-oss' });
+  // addPackageJsonDependency(tree, { type: NodeDependencyType.Dev, version: 'VERSIONPLACEHOLDER', name: 'ng-deploy-oss' });
 }
 
 export function fixAdditionalProperties(options: { [key: string]: any }) {
