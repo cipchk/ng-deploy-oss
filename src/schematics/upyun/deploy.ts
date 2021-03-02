@@ -2,7 +2,7 @@ import { BuilderContext } from '@angular-devkit/architect';
 const upyun = require('upyun');
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
-import { fixEnvValues, readFiles } from '../core/utils';
+import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
 
 interface UpyunDeployBuilderSchema extends DeployBuilderSchema {
   name: string;
@@ -30,7 +30,7 @@ function fixConfig(schema: UpyunDeployBuilderSchema, context: BuilderContext) {
   });
 }
 
-async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any) {
+async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any): Promise<void> {
   return new Promise(async reslove => {
     context.logger.info(`🤣 Start checking pre-deleted files`);
     const listResp = await client.listDir(schema.prefix, { limit: 10000 });
@@ -53,19 +53,16 @@ async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, 
 }
 
 async function upload(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any) {
-  const promises: Array<Promise<any>> = [];
-  readFiles({
-    dirPath: schema.outputPath,
-    cb: ({ filePath, stream, key }) => {
-      key = `${schema.prefix}${key}`;
-      context.logger.info(`    Uploading "${filePath}" => "${key}`);
-      const p = client.putFile(key, stream);
-      promises.push(p);
-    },
-    stream: true,
+  const list = readFiles({ dirPath: schema.outputPath, stream: true });
+  const promises = list.map(item => {
+    return () => {
+      const key = `${schema.prefix}${item.key}`;
+      context.logger.info(`    Uploading "${item.filePath}" => "${key}`);
+      return client.putFile(key, item.stream) as Promise<any>;
+    };
   });
   context.logger.info(`😀 Start uploading files`);
-  await Promise.all(promises);
+  await uploadFiles(schema, promises);
   context.logger.info(`✅ Complete all uploads`);
 }
 

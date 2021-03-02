@@ -1,6 +1,6 @@
 {
   "name": "ng-deploy-oss",
-  "version": "10.0.0",
+  "version": "10.0.2",
   "description": "Deploy Angular apps to aliyun OSS, qiniu, upyun using the Angular CLI.",
   "keywords": [
     "schematics",
@@ -26,6 +26,9 @@
   "main": "./schematics/index",
   "builders": "./builders.json",
   "schematics": "./collection.json",
+  "ng-add": {
+    "save": "devDependencies"
+  },
   "scripts": {
     "test": "jest --watch",
     "test:ci": "jest",

@@ -2,7 +2,7 @@ import { BuilderContext } from '@angular-devkit/architect';
 import * as qiniu from 'qiniu';
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
-import { fixEnvValues, readFiles } from '../core/utils';
+import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
 
 interface QiniuDeployBuilderSchema extends DeployBuilderSchema {
   ak: string;
@@ -49,7 +49,7 @@ async function listPrefix(schema: QiniuDeployBuilderSchema, bucketManager: qiniu
   });
 }
 
-async function clear(schema: QiniuDeployBuilderSchema, context: BuilderContext, bucketManager: qiniu.rs.BucketManager) {
+async function clear(schema: QiniuDeployBuilderSchema, context: BuilderContext, bucketManager: qiniu.rs.BucketManager): Promise<void> {
   return new Promise(async reslove => {
     context.logger.info(`🤣 Start checking pre-deleted files`);
     const items = (await listPrefix(schema, bucketManager)) as any[];
@@ -59,20 +59,20 @@ async function clear(schema: QiniuDeployBuilderSchema, context: BuilderContext, 
       return;
     }
     context.logger.info(`    Check that you need to delete ${items.length} files`);
-    const promises: Array<Promise<any>> = [];
+    const promises: Array<Promise<void>> = [];
     for (const item of items) {
-      const p = new Promise((reslove, reject) => {
+      const p: Promise<void> = new Promise((itemReslove, itemReject) => {
         bucketManager.delete(schema.bucket, item.key, (err, respBody, respInfo) => {
           if (err) {
-            reject(err);
+            itemReject(err);
             return;
           }
           if (respInfo.statusCode !== 200) {
-            reject(respBody);
+            itemReject(respBody);
             return;
           }
 
-          reslove();
+          itemReslove();
         });
       });
       promises.push(p);
@@ -98,32 +98,30 @@ export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: B
   // 上传文件
   const uploadToken = new qiniu.rs.PutPolicy({ scope: schema.bucket }).uploadToken(mac);
   const formUploader = new qiniu.form_up.FormUploader(config);
-  const promises: Array<Promise<any>> = [];
-  readFiles({
-    dirPath: schema.outputPath,
-    cb: ({ filePath, key }) => {
-      const p = new Promise((reslove, reject) => {
-        key = `${schema.prefix}${key}`;
+  const list = readFiles({ dirPath: schema.outputPath });
+  const promises = list.map(item => {
+    return () => {
+      return new Promise((reslove, reject) => {
+        const key = `${schema.prefix}${item.key}`;
         const putExtra = new qiniu.form_up.PutExtra();
-        formUploader.putFile(uploadToken, key, filePath, putExtra, (respErr, respBody, respInfo) => {
+        formUploader.putFile(uploadToken, key, item.filePath, putExtra, (respErr, respBody, respInfo) => {
           if (respErr) {
             reject(respErr);
             return;
           }
-          if (respInfo.statusCode != 200) {
+          if (respInfo.statusCode !== 200) {
             reject(respBody);
             return;
           }
-          context.logger.info(`    Uploading "${filePath}" => "${key}`);
+          context.logger.info(`    Uploading "${item.filePath}" => "${key}`);
           reslove();
         });
-      });
-      promises.push(p);
-    },
+      }) as Promise<void>;
+    };
   });
 
   context.logger.info(`😀 Start uploading files`);
-  await Promise.all(promises);
+  await uploadFiles(schema, promises);
   context.logger.info(`✅ Complete all uploads`);
   context.logger.warn(
     `📌注意：七牛云默认没有打开【默认首页设置】，不建议打开 Hash URL 路由策略，由于没有相应 API 接口只能手动对 404 页面设置，所有配置请至空间设置进行。`,

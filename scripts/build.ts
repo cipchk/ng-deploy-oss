@@ -55,7 +55,7 @@ Promise.all([buildLibrary()])
     if (!TEST) {
       return Promise.resolve();
     }
-    const projectName = `ng10-strict`;
+    const projectName = `ng11-strict`;
     console.info(`Test mode. Copy to [${projectName}] project`);
     const testProjectPath = join(process.cwd(), `../${projectName}/node_modules/ng-deploy-oss`);
     if (existsSync(testProjectPath)) {

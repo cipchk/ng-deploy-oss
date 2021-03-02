@@ -2,7 +2,7 @@ import { BuilderContext } from '@angular-devkit/architect';
 import * as OSS from 'ali-oss';
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
-import { fixEnvValues, readFiles } from '../core/utils';
+import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
 
 interface AliOSSDeployBuilderSchema extends DeployBuilderSchema {
   region: string;
@@ -36,7 +36,7 @@ function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
   });
 }
 
-async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS) {
+async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS): Promise<void> {
   return new Promise(async reslove => {
     context.logger.info(`🤣 Start checking pre-deleted files`);
     const resp = await client.list({ prefix: schema.prefix, 'max-keys': 1000 }, {});
@@ -59,19 +59,16 @@ async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext,
 }
 
 async function upload(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS) {
-  const promises: Array<Promise<any>> = [];
-  readFiles({
-    dirPath: schema.outputPath,
-    cb: ({ filePath, stream, key }) => {
-      key = `${schema.prefix}${key}`;
-      context.logger.info(`    Uploading "${filePath}" => "${key}`);
-      const p = client.put(key, stream);
-      promises.push(p);
-    },
-    stream: true,
+  const list = readFiles({ dirPath: schema.outputPath, stream: true });
+  const promises = list.map(item => {
+    return () => {
+      const key = `${schema.prefix}${item.key}`;
+      context.logger.info(`    Uploading "${item.filePath}" => "${key}`);
+      return client.put(key, item.stream) as Promise<any>;
+    };
   });
   context.logger.info(`😀 Start uploading files`);
-  await Promise.all(promises);
+  await uploadFiles(schema, promises);
   context.logger.info(`✅ Complete all uploads`);
 }
 
