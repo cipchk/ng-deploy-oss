@@ -18,6 +18,10 @@ async function fixPackage() {
   const path = dest('package.json');
   const pkg = await import(path);
   ['scripts', 'devDependencies', 'jest', 'husky'].forEach(key => delete pkg[key]);
+  pkg.dependencies['@angular-devkit/architect'] = `^0.900.0 || ^0.1000.0 || ^0.1100.0 || ^0.1200.0`;
+  ['@angular-devkit/core', '@angular-devkit/schematics'].forEach(name => {
+    pkg.dependencies[name] = `^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0`;
+  });
   return writeFile(path, JSON.stringify(pkg, null, 2));
 }
 
@@ -55,7 +59,7 @@ Promise.all([buildLibrary()])
     if (!TEST) {
       return Promise.resolve();
     }
-    const projectName = `ng10-strict`;
+    const projectName = `ng11-strict`;
     console.info(`Test mode. Copy to [${projectName}] project`);
     const testProjectPath = join(process.cwd(), `../${projectName}/node_modules/ng-deploy-oss`);
     if (existsSync(testProjectPath)) {

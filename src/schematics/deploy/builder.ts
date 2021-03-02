@@ -35,7 +35,7 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
   const baseHref = schema.baseHref ? `Your base-href: "${schema.baseHref}` : '';
   context.logger.info(`📦Building "${context.target.project}". Configuration: "${configuration}". ${baseHref}`);
 
-  const build = await context.scheduleTarget(
+  const buildTarget = await context.scheduleTarget(
     {
       target: 'build',
       project: context.target.project || '',
@@ -44,7 +44,7 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
     overrides as json.JsonObject,
   );
 
-  const buildResult = await build.result;
+  const buildResult = await buildTarget.result;
 
   if (buildResult.success !== true) {
     context.logger.error(`❌Application build failed`);

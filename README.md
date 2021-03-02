@@ -12,7 +12,7 @@
 
 ```bash
 npm install -g @angular/cli
-ng new hello-world --defaults
+ng new hello-world
 cd hello-world
 ```
 
@@ -40,6 +40,7 @@ ng deploy
 | `buildCommand` | `-` | 自定义构建命令行 |
 | `baseHref` | `-` | 指定 `baseHref` 参数，赞同 `ng build --base-href=xx` 值 |
 | `preClean` | `true` | 是否预清除所有远程目录下的文件 |
+| `oneByOneUpload` | `false` | 是否逐个上传文件，并且将所有 html 放在最后上传 |
 
 ### 不同参数
 

@@ -23,6 +23,8 @@ export interface DeployBuilderSchema {
   baseHref: string;
   /** 是否预清除所有远程目录下的文件 */
   preClean: boolean;
+  /** 是否逐个上传 */
+  oneByOneUpload: boolean;
   '--'?: string[];
 }
 

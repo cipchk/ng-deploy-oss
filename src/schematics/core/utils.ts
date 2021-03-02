@@ -4,7 +4,7 @@ import { experimental } from '@angular-devkit/core';
 import { prompt } from 'inquirer';
 import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
 import { join } from 'path';
-import { PluginOptions, EnvName } from './types';
+import { PluginOptions, EnvName, DeployBuilderSchema } from './types';
 import { MESSAGES } from './config';
 
 export function getPath(tree: Tree): string {
@@ -56,6 +56,7 @@ export async function addDeployArchitect(tree: Tree, options: PluginOptions, dep
     prefix: await input(MESSAGES.input_prefix),
     buildCommand: await input(MESSAGES.input_buildCommand),
     preClean: await confirm(MESSAGES.input_preDeletedFiles, true),
+    oneByOneUpload: await confirm(MESSAGES.input_oneByOneUpload, false),
   };
   Object.keys(deployOptions)
     .filter(key => deployOptions[key] == null || deployOptions[key] === '')
@@ -93,10 +94,10 @@ export function fixEnvValues(options: { [key: string]: any }, envData: EnvName[]
 
 export function readFiles(options: {
   dirPath: string;
-  cb: (res: { filePath: string; stream: ReadStream | null; key: string }) => void;
   stream?: boolean;
-}) {
+}): Array<{ filePath: string; stream: ReadStream | null; key: string }> {
   const startLen = options.dirPath.length + 1;
+  const fileList: string[] = [];
   const fn = (p: string) => {
     readdirSync(p).forEach(filePath => {
       const fullPath = join(p, filePath);
@@ -104,16 +105,29 @@ export function readFiles(options: {
         fn(fullPath);
         return;
       }
-      options.cb({
-        filePath: fullPath,
-        stream: options.stream === true ? createReadStream(fullPath) : null,
-        // 修复 window 下的分隔符会引起 %5C
-        key: fullPath.substr(startLen).replace(/\\/g, '/'),
-      });
+      fileList.push(fullPath);
     });
   };
-
   fn(options.dirPath);
+
+  // 将所有 `.html` 放置最后上传
+  // https://github.com/cipchk/ng-deploy-oss/issues/13
+  fileList.sort(a => (a.endsWith('.html') ? 1 : -1));
+  return fileList.map(fullPath => ({
+    filePath: fullPath,
+    stream: options.stream === true ? createReadStream(fullPath) : null,
+    // 修复 window 下的分隔符会引起 %5C
+    key: fullPath.substr(startLen).replace(/\\/g, '/'),
+  }));
+}
+
+export async function uploadFiles(schema: DeployBuilderSchema, promises: Array<() => Promise<void>>): Promise<any> {
+  if (!schema.oneByOneUpload) {
+    return Promise.all(promises.map(fn => fn()));
+  }
+  for (const item of promises) {
+    await item();
+  }
 }
 
 export function normalizePath(...args: string[]): string {
