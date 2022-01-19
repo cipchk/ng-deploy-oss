@@ -1,5 +1,3 @@
-import { experimental } from '@angular-devkit/core';
-
 export type NgAddType = 'qiniu' | 'upyun' | 'ali-oss';
 
 export interface NgAddOptions {
@@ -10,7 +8,7 @@ export interface NgAddOptions {
 export interface PluginOptions {
   ngAdd: NgAddOptions;
   projectName: string;
-  workspaceSchema: experimental.workspace.WorkspaceSchema;
+  workspaceSchema: any;
   outputPath: string;
 }
 

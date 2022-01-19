@@ -18,9 +18,9 @@ async function fixPackage() {
   const path = dest('package.json');
   const pkg = await import(path);
   ['scripts', 'devDependencies', 'jest', 'husky'].forEach(key => delete pkg[key]);
-  pkg.dependencies['@angular-devkit/architect'] = `^0.900.0 || ^0.1000.0 || ^0.1100.0 || ^0.1200.0`;
+  pkg.dependencies['@angular-devkit/architect'] = `^0.1100.0 || ^0.1200.0 || ^0.1300.0`;
   ['@angular-devkit/core', '@angular-devkit/schematics'].forEach(name => {
-    pkg.dependencies[name] = `^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0`;
+    pkg.dependencies[name] = `^11.0.0 || ^12.0.0 || ^13.0.0`;
   });
   return writeFile(path, JSON.stringify(pkg, null, 2));
 }

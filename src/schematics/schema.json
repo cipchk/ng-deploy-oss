@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/schema",
-  "id": "ng-deploy-oss-ng-add",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "ng-deploy-oss-ng-add",
   "title": "ng-deploy-oss Add Options Schema",
   "type": "object",
   "properties": {

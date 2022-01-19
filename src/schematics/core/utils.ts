@@ -1,5 +1,4 @@
 import { Tree, SchematicsException } from '@angular-devkit/schematics';
-import { experimental } from '@angular-devkit/core';
 // import { addPackageJsonDependency, NodeDependencyType } from 'schematics-utilities';
 import { prompt } from 'inquirer';
 import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
@@ -13,7 +12,7 @@ export function getPath(tree: Tree): string {
   return path;
 }
 
-export function getWorkspace(tree: Tree): experimental.workspace.WorkspaceSchema {
+export function getWorkspace(tree: Tree): any {
   const configBuffer = tree.read(getPath(tree));
   if (configBuffer === null) {
     throw new SchematicsException('Could not find angular.json');
