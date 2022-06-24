@@ -8,7 +8,7 @@ import { MESSAGES } from './config';
 
 export function getPath(tree: Tree): string {
   const possibleFiles = ['/angular.json', '/.angular.json'];
-  const path = possibleFiles.filter(file => tree.exists(file))[0];
+  const path = possibleFiles.filter((file) => tree.exists(file))[0];
   return path;
 }
 
@@ -23,7 +23,8 @@ export function getWorkspace(tree: Tree): any {
 
 export function getProject(tree: Tree, projectName: string) {
   const workspace = getWorkspace(tree);
-  const name = projectName! || workspace.defaultProject;
+  const projectNames = Object.keys(workspace.projects);
+  const name = projectName! || (projectNames.length > 0 ? projectNames[0] : null);
   if (!name) {
     throw new SchematicsException('No Angular project selected and no default project in the workspace');
   }
@@ -58,8 +59,8 @@ export async function addDeployArchitect(tree: Tree, options: PluginOptions, dep
     oneByOneUpload: await confirm(MESSAGES.input_oneByOneUpload, false),
   };
   Object.keys(deployOptions)
-    .filter(key => deployOptions[key] == null || deployOptions[key] === '')
-    .forEach(key => delete deployOptions[key]);
+    .filter((key) => deployOptions[key] == null || deployOptions[key] === '')
+    .forEach((key) => delete deployOptions[key]);
   const project = options.workspaceSchema.projects[options.projectName];
   project.architect!['deploy'] = {
     builder: 'ng-deploy-oss:deploy',
@@ -75,8 +76,8 @@ export async function addDeployArchitect(tree: Tree, options: PluginOptions, dep
 export function fixAdditionalProperties(options: { [key: string]: any }) {
   if (!Array.isArray(options['--'])) return;
   options['--']
-    .filter(w => w.startsWith('--'))
-    .forEach(optStr => {
+    .filter((w) => w.startsWith('--'))
+    .forEach((optStr) => {
       const arr = optStr.substr(2).split('=');
       options[arr[0]] = arr[1];
     });
@@ -98,7 +99,7 @@ export function readFiles(options: {
   const startLen = options.dirPath.length + 1;
   const fileList: string[] = [];
   const fn = (p: string) => {
-    readdirSync(p).forEach(filePath => {
+    readdirSync(p).forEach((filePath) => {
       const fullPath = join(p, filePath);
       if (statSync(fullPath).isDirectory()) {
         fn(fullPath);
@@ -111,8 +112,8 @@ export function readFiles(options: {
 
   // 将所有 `.html` 放置最后上传
   // https://github.com/cipchk/ng-deploy-oss/issues/13
-  fileList.sort(a => (a.endsWith('.html') ? 1 : -1));
-  return fileList.map(fullPath => ({
+  fileList.sort((a) => (a.endsWith('.html') ? 1 : -1));
+  return fileList.map((fullPath) => ({
     filePath: fullPath,
     stream: options.stream === true ? createReadStream(fullPath) : null,
     // 修复 window 下的分隔符会引起 %5C
@@ -122,7 +123,7 @@ export function readFiles(options: {
 
 export async function uploadFiles(schema: DeployBuilderSchema, promises: Array<() => Promise<void>>): Promise<any> {
   if (!schema.oneByOneUpload) {
-    return Promise.all(promises.map(fn => fn()));
+    return Promise.all(promises.map((fn) => fn()));
   }
   for (const item of promises) {
     await item();
