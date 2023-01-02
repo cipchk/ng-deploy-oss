@@ -73,7 +73,7 @@ Promise.all([buildLibrary()])
   })
   .then(() => {
     const execSync = require('child_process').execSync;
-    const command = `npm publish dist --access public --ignore-scripts`;
+    const command = `cd dist & npm publish --access public --ignore-scripts`;
     if (RELEASE) {
       execSync(command);
     }
