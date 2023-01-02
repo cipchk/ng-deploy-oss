@@ -11,16 +11,20 @@ const dest = (...args: string[]) => join(process.cwd(), 'dist', ...args);
 const destPath = dest('');
 
 function spawnPromise(command: string, args: string[]) {
-  return new Promise(resolve => spawn(command, args, { stdio: 'inherit' }).on('close', resolve));
+  return new Promise((resolve) => spawn(command, args, { stdio: 'inherit' }).on('close', resolve));
 }
 
 async function fixPackage() {
   const path = dest('package.json');
   const pkg = await import(path);
-  ['scripts', 'devDependencies', 'jest', 'husky'].forEach(key => delete pkg[key]);
-  pkg.dependencies['@angular-devkit/architect'] = `^0.1100.0 || ^0.1200.0 || ^0.1300.0`;
-  ['@angular-devkit/core', '@angular-devkit/schematics'].forEach(name => {
-    pkg.dependencies[name] = `^11.0.0 || ^12.0.0 || ^13.0.0`;
+  ['scripts', 'devDependencies', 'jest', 'husky'].forEach((key) => delete pkg[key]);
+  // pkg.dependencies['@angular-devkit/architect'] = `^0.1100.0 || ^0.1200.0 || ^0.1300.0`;
+  // ['@angular-devkit/core', '@angular-devkit/schematics'].forEach(name => {
+  //   pkg.dependencies[name] = `^11.0.0 || ^12.0.0 || ^13.0.0`;
+  // });
+  const rootPackage = await import(dest('../package.json'));
+  ['@angular-devkit/architect', '@angular-devkit/core', '@angular-devkit/schematics'].forEach((key) => {
+    pkg.dependencies[key] = rootPackage.dependencies[key];
   });
   return writeFile(path, JSON.stringify(pkg, null, 2));
 }
@@ -47,7 +51,7 @@ async function buildLibrary() {
   if (existsSync(destPath)) {
     rimraf.sync(destPath);
   }
-  ['package.json', 'README.md'].forEach(fileName => {
+  ['package.json', 'README.md'].forEach((fileName) => {
     copySync(join(process.cwd(), fileName), dest(fileName));
   });
   await Promise.all([compileSchematics(), await fixPackage()]);
@@ -69,7 +73,7 @@ Promise.all([buildLibrary()])
   })
   .then(() => {
     const execSync = require('child_process').execSync;
-    const command = `npm publish dist --access public --ignore-scripts`;
+    const command = `cd dist & npm publish --access public --ignore-scripts`;
     if (RELEASE) {
       execSync(command);
     }
