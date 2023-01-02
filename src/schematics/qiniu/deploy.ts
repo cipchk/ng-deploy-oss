@@ -27,7 +27,7 @@ function fixConfig(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
     prefix: schema.prefix,
   };
   context.logger.info(`📦Current configuration:`);
-  Object.keys(logConfog).forEach(key => {
+  Object.keys(logConfog).forEach((key) => {
     context.logger.info(`    ${key} = ${logConfog[key]}`);
   });
 }
@@ -50,7 +50,7 @@ async function listPrefix(schema: QiniuDeployBuilderSchema, bucketManager: qiniu
 }
 
 async function clear(schema: QiniuDeployBuilderSchema, context: BuilderContext, bucketManager: qiniu.rs.BucketManager): Promise<void> {
-  return new Promise(async reslove => {
+  return new Promise(async (reslove) => {
     context.logger.info(`🤣 Start checking pre-deleted files`);
     const items = (await listPrefix(schema, bucketManager)) as any[];
     if (items.length === 0) {
@@ -99,7 +99,7 @@ export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: B
   const uploadToken = new qiniu.rs.PutPolicy({ scope: schema.bucket }).uploadToken(mac);
   const formUploader = new qiniu.form_up.FormUploader(config);
   const list = readFiles({ dirPath: schema.outputPath });
-  const promises = list.map(item => {
+  const promises = list.map((item) => {
     return () => {
       return new Promise((reslove, reject) => {
         const key = `${schema.prefix}${item.key}`;
