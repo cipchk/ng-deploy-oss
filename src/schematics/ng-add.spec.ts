@@ -16,13 +16,13 @@ describe('ng add ng-deploy-oss', () => {
   const testRunner = new SchematicTestRunner('schematics', collectionPath);
 
   beforeEach(async () => {
-    const appTree = await testRunner.runExternalSchematicAsync('@schematics/angular', 'workspace', workspaceOptions).toPromise();
-    tree = await testRunner.runExternalSchematicAsync('@schematics/angular', 'application', appOptions, appTree).toPromise();
+    const appTree = await testRunner.runExternalSchematic('@schematics/angular', 'workspace', workspaceOptions);
+    tree = await testRunner.runExternalSchematic('@schematics/angular', 'application', appOptions, appTree);
   });
 
   describe('ng add', () => {
     it('should be working', async () => {
-      tree = await testRunner.runSchematicAsync('ng-add', {}, tree).toPromise();
+      tree = await testRunner.runSchematic('ng-add', {}, tree);
 
       const angularJson = JSON.parse(tree.readContent('/angular.json'));
       const deploy = angularJson.projects[appOptions.name].architect.deploy;
@@ -30,9 +30,9 @@ describe('ng add ng-deploy-oss', () => {
       expect(deploy.builder).toBe(`ng-deploy-oss:deploy`);
     });
 
-    ['ali-oss', 'upyun'].forEach(type => {
+    ['ali-oss', 'upyun'].forEach((type) => {
       it(`should be ${type} via type`, async () => {
-        tree = await testRunner.runSchematicAsync('ng-add', { type }, tree).toPromise();
+        tree = await testRunner.runSchematic('ng-add', { type }, tree);
 
         const angularJson = JSON.parse(tree.readContent('/angular.json'));
         const deploy = angularJson.projects[appOptions.name].architect.deploy;
@@ -42,7 +42,7 @@ describe('ng add ng-deploy-oss', () => {
     });
 
     it('should be throw error when is invalid type', async () => {
-      await expect(testRunner.runSchematicAsync('ng-add', { type: 'INVALIDTYPE' }, Tree.empty()).toPromise()).rejects.toThrow();
+      await expect(testRunner.runSchematic('ng-add', { type: 'INVALIDTYPE' }, Tree.empty())).rejects.toThrow();
     });
   });
 });
