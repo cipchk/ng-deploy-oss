@@ -7,7 +7,7 @@ import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
 interface QiniuDeployBuilderSchema extends DeployBuilderSchema {
   ak: string;
   sk: string;
-  zone: 'Zone_z0' | 'Zone_z1' | 'Zone_z2' | 'Zone_na0' | 'Zone_as0';
+  zone: keyof typeof qiniu.zone;
   bucket: string;
   prefix: string;
 }
@@ -24,10 +24,10 @@ function fixConfig(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
     sk: schema.sk,
     zone: `qiniu.zone.${schema.zone}`,
     bucket: schema.bucket,
-    prefix: schema.prefix,
+    prefix: schema.prefix
   };
   context.logger.info(`📦Current configuration:`);
-  Object.keys(logConfog).forEach((key) => {
+  Object.keys(logConfog).forEach(key => {
     context.logger.info(`    ${key} = ${logConfog[key]}`);
   });
 }
@@ -49,40 +49,40 @@ async function listPrefix(schema: QiniuDeployBuilderSchema, bucketManager: qiniu
   });
 }
 
-async function clear(schema: QiniuDeployBuilderSchema, context: BuilderContext, bucketManager: qiniu.rs.BucketManager): Promise<void> {
-  return new Promise(async (reslove) => {
-    context.logger.info(`🤣 Start checking pre-deleted files`);
-    const items = (await listPrefix(schema, bucketManager)) as any[];
-    if (items.length === 0) {
-      context.logger.info(`    No need to delete files`);
-      reslove();
-      return;
-    }
-    context.logger.info(`    Check that you need to delete ${items.length} files`);
-    const promises: Array<Promise<void>> = [];
-    for (const item of items) {
-      const p: Promise<void> = new Promise((itemReslove, itemReject) => {
-        bucketManager.delete(schema.bucket, item.key, (err, respBody, respInfo) => {
-          if (err) {
-            itemReject(err);
-            return;
-          }
-          if (respInfo.statusCode !== 200) {
-            itemReject(respBody);
-            return;
-          }
+async function clear(
+  schema: QiniuDeployBuilderSchema,
+  context: BuilderContext,
+  bucketManager: qiniu.rs.BucketManager
+): Promise<void> {
+  context.logger.info(`🤣 Start checking pre-deleted files`);
+  const items = (await listPrefix(schema, bucketManager)) as any[];
+  if (items.length === 0) {
+    context.logger.info(`    No need to delete files`);
+    return;
+  }
+  context.logger.info(`    Check that you need to delete ${items.length} files`);
+  const promises: Array<Promise<void>> = [];
+  for (const item of items) {
+    const p: Promise<void> = new Promise((itemReslove, itemReject) => {
+      bucketManager.delete(schema.bucket, item.key, (err, respBody, respInfo) => {
+        if (err) {
+          itemReject(err);
+          return;
+        }
+        if (respInfo.statusCode !== 200) {
+          itemReject(respBody);
+          return;
+        }
 
-          itemReslove();
-        });
+        itemReslove();
       });
-      promises.push(p);
-    }
-    if (promises.length > 0) {
-      await Promise.all(promises);
-      context.logger.info(`    Successfully deleted`);
-    }
-    reslove();
-  });
+    });
+    promises.push(p);
+  }
+  if (promises.length > 0) {
+    await Promise.all(promises);
+    context.logger.info(`    Successfully deleted`);
+  }
 }
 
 export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
@@ -99,7 +99,7 @@ export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: B
   const uploadToken = new qiniu.rs.PutPolicy({ scope: schema.bucket }).uploadToken(mac);
   const formUploader = new qiniu.form_up.FormUploader(config);
   const list = readFiles({ dirPath: schema.outputPath });
-  const promises = list.map((item) => {
+  const promises = list.map(item => {
     return () => {
       return new Promise((reslove, reject) => {
         const key = `${schema.prefix}${item.key}`;
@@ -124,6 +124,6 @@ export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: B
   await uploadFiles(schema, promises);
   context.logger.info(`✅ Complete all uploads`);
   context.logger.warn(
-    `📌注意：七牛云默认没有打开【默认首页设置】，不建议打开 Hash URL 路由策略，由于没有相应 API 接口只能手动对 404 页面设置，所有配置请至空间设置进行。`,
+    `📌注意：七牛云默认没有打开【默认首页设置】，不建议打开 Hash URL 路由策略，由于没有相应 API 接口只能手动对 404 页面设置，所有配置请至空间设置进行。`
   );
 }

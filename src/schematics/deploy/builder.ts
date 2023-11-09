@@ -15,6 +15,7 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
 
   if (schema.buildCommand) {
     context.logger.info(`📦Building via "${schema.buildCommand}"`);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const execSync = require('child_process').execSync;
     execSync(schema.buildCommand);
     context.logger.info(`😍Build Completed`);
@@ -25,7 +26,7 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
 
   const overrides = {
     // this is an example how to override the workspace set of options
-    ...(schema.baseHref && { baseHref: schema.baseHref }),
+    ...(schema.baseHref && { baseHref: schema.baseHref })
   };
 
   if (!context.target) {
@@ -39,9 +40,9 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
     {
       target: 'build',
       project: context.target.project || '',
-      configuration,
+      configuration
     },
-    overrides as json.JsonObject,
+    overrides as json.JsonObject
   );
 
   const buildResult = await buildTarget.result;
@@ -50,7 +51,7 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
     context.logger.error(`❌Application build failed`);
     return {
       error: `❌Application build failed`,
-      success: false,
+      success: false
     };
   }
 
@@ -78,5 +79,5 @@ export default createBuilder<any>(
         break;
     }
     return { success: true };
-  },
+  }
 );

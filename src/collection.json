@@ -1,5 +1,4 @@
 {
-  "$schema": "@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "ng-add": {
       "description": "Adds Angular Deploy aliyun OSS, qiniu, upyun to the application without affecting any templates",

@@ -21,7 +21,8 @@
     "strictNullChecks": true,
     "target": "es6",
     "types": ["jest", "node"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*"],
   "exclude": ["**/*.spec.ts", "src/*/files/**/*", "**/__mocks__/*", "**/__tests__/*"]

@@ -1,4 +1,5 @@
 import { BuilderContext } from '@angular-devkit/architect';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const upyun = require('upyun');
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
@@ -22,7 +23,7 @@ function fixConfig(schema: UpyunDeployBuilderSchema, context: BuilderContext) {
     name: schema.name,
     operatorName: schema.operatorName,
     operatorPwd: schema.operatorPwd,
-    prefix: schema.prefix,
+    prefix: schema.prefix
   };
   context.logger.info(`📦Current configuration:`);
   Object.keys(logConfog).forEach(key => {
@@ -31,25 +32,21 @@ function fixConfig(schema: UpyunDeployBuilderSchema, context: BuilderContext) {
 }
 
 async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any): Promise<void> {
-  return new Promise(async reslove => {
-    context.logger.info(`🤣 Start checking pre-deleted files`);
-    const listResp = await client.listDir(schema.prefix, { limit: 10000 });
-    if (listResp === false) {
-      context.logger.info(`    No need to delete files`);
-      reslove();
-      return;
-    }
-    context.logger.info(`    Check that you need to delete ${listResp.files.length} files`);
-    const promises: Array<Promise<any>> = [];
-    for (const item of listResp.files as Array<{ name: string; size: 'N' | 'F' }>) {
-      promises.push(client.deleteFile(item.name));
-    }
-    if (promises.length > 0) {
-      await Promise.all(promises);
-      context.logger.info(`    Successfully deleted`);
-    }
-    reslove();
-  });
+  context.logger.info(`🤣 Start checking pre-deleted files`);
+  const listResp = await client.listDir(schema.prefix, { limit: 10000 });
+  if (listResp === false) {
+    context.logger.info(`    No need to delete files`);
+    return;
+  }
+  context.logger.info(`    Check that you need to delete ${listResp.files.length} files`);
+  const promises: Array<Promise<any>> = [];
+  for (const item of listResp.files as Array<{ name: string; size: 'N' | 'F' }>) {
+    promises.push(client.deleteFile(item.name));
+  }
+  if (promises.length > 0) {
+    await Promise.all(promises);
+    context.logger.info(`    Successfully deleted`);
+  }
 }
 
 async function upload(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any) {

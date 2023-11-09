@@ -1,8 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "id": "FirebaseDeploySchema",
-  "title": "Firebase Deploy",
-  "description": "Ng Deploy target options for Firebase.",
+  "$id": "ng-deploy-oss",
+  "title": "ng-deploy-oss Schema",
   "properties": {
     "noBuild": {
       "type": "boolean",

@@ -11,19 +11,19 @@ const dest = (...args: string[]) => join(process.cwd(), 'dist', ...args);
 const destPath = dest('');
 
 function spawnPromise(command: string, args: string[]) {
-  return new Promise((resolve) => spawn(command, args, { stdio: 'inherit' }).on('close', resolve));
+  return new Promise(resolve => spawn(command, args, { stdio: 'inherit' }).on('close', resolve));
 }
 
 async function fixPackage() {
   const path = dest('package.json');
   const pkg = await import(path);
-  ['scripts', 'devDependencies', 'jest', 'husky'].forEach((key) => delete pkg[key]);
+  ['scripts', 'devDependencies', 'jest', 'husky'].forEach(key => delete pkg[key]);
   // pkg.dependencies['@angular-devkit/architect'] = `^0.1100.0 || ^0.1200.0 || ^0.1300.0`;
   // ['@angular-devkit/core', '@angular-devkit/schematics'].forEach(name => {
   //   pkg.dependencies[name] = `^11.0.0 || ^12.0.0 || ^13.0.0`;
   // });
   const rootPackage = await import(dest('../package.json'));
-  ['@angular-devkit/architect', '@angular-devkit/core', '@angular-devkit/schematics'].forEach((key) => {
+  ['@angular-devkit/architect', '@angular-devkit/core', '@angular-devkit/schematics'].forEach(key => {
     pkg.dependencies[key] = rootPackage.dependencies[key];
   });
   return writeFile(path, JSON.stringify(pkg, null, 2));
@@ -36,7 +36,7 @@ async function compileSchematics() {
     copy(src('builders.json'), dest('builders.json')),
     copy(src('collection.json'), dest('collection.json')),
     copy(src('schematics', 'schema.json'), dest('schematics', 'schema.json')),
-    copy(src('schematics', 'deploy', 'schema.json'), dest('schematics', 'deploy', 'schema.json')),
+    copy(src('schematics', 'deploy', 'schema.json'), dest('schematics', 'deploy', 'schema.json'))
   ]);
 }
 
@@ -51,7 +51,7 @@ async function buildLibrary() {
   if (existsSync(destPath)) {
     rimraf.sync(destPath);
   }
-  ['package.json', 'README.md'].forEach((fileName) => {
+  ['package.json', 'README.md'].forEach(fileName => {
     copySync(join(process.cwd(), fileName), dest(fileName));
   });
   await Promise.all([compileSchematics(), await fixPackage()]);
@@ -63,7 +63,7 @@ Promise.all([buildLibrary()])
     if (!TEST) {
       return Promise.resolve();
     }
-    const projectName = `ng11-strict`;
+    const projectName = `ng17`;
     console.info(`Test mode. Copy to [${projectName}] project`);
     const testProjectPath = join(process.cwd(), `../${projectName}/node_modules/ng-deploy-oss`);
     if (existsSync(testProjectPath)) {
@@ -72,6 +72,7 @@ Promise.all([buildLibrary()])
     return copy(destPath, testProjectPath);
   })
   .then(() => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const execSync = require('child_process').execSync;
     const command = `cd dist & npm publish --access public --ignore-scripts`;
     if (RELEASE) {
