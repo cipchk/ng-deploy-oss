@@ -18,6 +18,11 @@ jobs:
         with:
           cmd: build
 
+      - name: lint
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint
+
       - name: test
         uses: borales/actions-yarn@v4
         with:

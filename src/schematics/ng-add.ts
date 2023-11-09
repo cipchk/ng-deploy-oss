@@ -4,6 +4,7 @@ import { getProject } from './core/utils';
 import { ngAddQiniu } from './qiniu/ng-add';
 import { ngAddUpyun } from './upyun/ng-add';
 import { ngAddOSS } from './ali-oss/ng-add';
+import { join } from 'path';
 
 export const ngAdd = (options: NgAddOptions): Rule => {
   return (tree: Tree, context: SchematicContext) => {
@@ -12,8 +13,10 @@ export const ngAdd = (options: NgAddOptions): Rule => {
       ngAdd: options,
       projectName: project.name,
       workspaceSchema: project.workspace,
-      outputPath: project.outputPath,
+      outputPath: project.outputPath
     };
+    // angular17 will add additional browser
+    opt.outputPath = join(opt.outputPath, 'browser');
 
     const rules: Rule[] = [];
     switch (options.type) {

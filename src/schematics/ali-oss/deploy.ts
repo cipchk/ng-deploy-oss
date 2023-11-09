@@ -1,5 +1,5 @@
 import { BuilderContext } from '@angular-devkit/architect';
-import * as OSS from 'ali-oss';
+import OSS from 'ali-oss';
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
 import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
@@ -28,7 +28,7 @@ function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
     sk: schema.sk,
     stsToken: schema.stsToken,
     bucket: schema.bucket,
-    prefix: schema.prefix,
+    prefix: schema.prefix
   };
   context.logger.info(`📦Current configuration:`);
   Object.keys(logConfog).forEach(key => {
@@ -37,25 +37,21 @@ function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
 }
 
 async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS): Promise<void> {
-  return new Promise(async reslove => {
-    context.logger.info(`🤣 Start checking pre-deleted files`);
-    const resp = await client.list({ prefix: schema.prefix, 'max-keys': 1000 }, {});
-    if (resp.objects == null || resp.objects.length === 0) {
-      context.logger.info(`    No need to delete files`);
-      reslove();
-      return;
-    }
-    context.logger.info(`    Check that you need to delete ${resp.objects.length} files`);
-    const promises: Array<Promise<any>> = [];
-    for (const item of resp.objects) {
-      promises.push(client.delete(item.name));
-    }
-    if (promises.length > 0) {
-      await Promise.all(promises);
-      context.logger.info(`    Successfully deleted`);
-    }
-    reslove();
-  });
+  context.logger.info(`🤣 Start checking pre-deleted files`);
+  const resp = await client.list({ prefix: schema.prefix, 'max-keys': 1000 }, {});
+  if (resp.objects == null || resp.objects.length === 0) {
+    context.logger.info(`    No need to delete files`);
+    return;
+  }
+  context.logger.info(`    Check that you need to delete ${resp.objects.length} files`);
+  const promises: Array<Promise<any>> = [];
+  for (const item of resp.objects) {
+    promises.push(client.delete(item.name));
+  }
+  if (promises.length > 0) {
+    await Promise.all(promises);
+    context.logger.info(`    Successfully deleted`);
+  }
 }
 
 async function upload(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS) {
@@ -81,7 +77,7 @@ export async function ngDeployAliOSS(schema: AliOSSDeployBuilderSchema, context:
     accessKeySecret: schema.sk,
     bucket: schema.bucket,
     stsToken: schema.stsToken,
-    timeout: TIMEOUT,
+    timeout: TIMEOUT
   });
   if (schema.preClean) {
     await clear(schema, context, client);
@@ -89,6 +85,6 @@ export async function ngDeployAliOSS(schema: AliOSSDeployBuilderSchema, context:
   await upload(schema, context, client);
 
   context.logger.warn(
-    `📌注意：阿里云OSS在未绑定域名的情况下直接打开 index.html 会以下载的形式出现，如何设置静态网站托管请参考：https://help.aliyun.com/document_detail/31899.html`,
+    `📌注意：阿里云OSS在未绑定域名的情况下直接打开 index.html 会以下载的形式出现，如何设置静态网站托管请参考：https://help.aliyun.com/document_detail/31899.html`
   );
 }
