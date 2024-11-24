@@ -1,6 +1,5 @@
 import { BuilderContext } from '@angular-devkit/architect';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const upyun = require('upyun');
+import upyun from 'upyun';
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
 import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
