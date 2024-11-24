@@ -1,6 +1,8 @@
 import { spawn } from 'child_process';
 import { copy, copySync, writeFile, existsSync, readFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
+import { execSync } from 'child_process';
+
 import * as rimraf from 'rimraf';
 
 const TEST = process.argv.includes('--test');
@@ -73,12 +75,13 @@ Promise.all([buildLibrary()])
   })
   .then(() => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const execSync = require('child_process').execSync;
     const command = `cd dist & npm publish --access public --ignore-scripts`;
     if (RELEASE) {
+      console.log('Release Mode');
       execSync(command);
     }
     if (RELEASE_NEXT) {
+      console.log('Release Next Mode');
       execSync(`${command} --tag next`);
     }
 

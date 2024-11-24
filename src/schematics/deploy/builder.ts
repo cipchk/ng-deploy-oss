@@ -5,6 +5,7 @@ import { fixAdditionalProperties } from '../core/utils';
 import { ngDeployQiniu } from '../qiniu/deploy';
 import { ngDeployUpyun } from '../upyun/deploy';
 import { ngDeployAliOSS } from '../ali-oss/deploy';
+import { execSync } from 'child_process';
 
 async function build(schema: DeployBuilderSchema, context: BuilderContext) {
   context.logger.info(`🥶Executing ${schema.type} deploy...`);
@@ -16,7 +17,6 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
   if (schema.buildCommand) {
     context.logger.info(`📦Building via "${schema.buildCommand}"`);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const execSync = require('child_process').execSync;
     execSync(schema.buildCommand);
     context.logger.info(`😍Build Completed`);
     return;
