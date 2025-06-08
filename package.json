@@ -1,6 +1,6 @@
 {
   "name": "ng-deploy-oss",
-  "version": "19.0.0",
+  "version": "20.0.0",
   "description": "Deploy Angular apps to aliyun OSS, qiniu, upyun using the Angular CLI.",
   "keywords": [
     "schematics",
