@@ -54,7 +54,7 @@ export function getProject(tree: Tree, projectName: string) {
   return { name, workspace, outputPath: project.architect.build.options.outputPath };
 }
 
-export async function addDeployArchitect(tree: Tree, options: PluginOptions, deployOptions: { [key: string]: any }) {
+export async function addDeployArchitect(tree: Tree, options: PluginOptions, deployOptions: Record<string, any>) {
   deployOptions = {
     outputPath: options.outputPath,
     type: options.ngAdd.type,
@@ -79,7 +79,7 @@ export async function addDeployArchitect(tree: Tree, options: PluginOptions, dep
   // addPackageJsonDependency(tree, { type: NodeDependencyType.Dev, version: 'VERSIONPLACEHOLDER', name: 'ng-deploy-oss' });
 }
 
-export function fixAdditionalProperties(options: { [key: string]: any }) {
+export function fixAdditionalProperties(options: Record<string, any>) {
   if (!Array.isArray(options['--'])) return;
   options['--']
     .filter(w => w.startsWith('--'))
@@ -89,7 +89,7 @@ export function fixAdditionalProperties(options: { [key: string]: any }) {
     });
 }
 
-export function fixEnvValues(options: { [key: string]: any }, envData: EnvName[]) {
+export function fixEnvValues(options: Record<string, any>, envData: EnvName[]) {
   for (const envItem of envData) {
     const envValue = process.env[envItem.key];
     if (envValue != null) {
@@ -101,7 +101,7 @@ export function fixEnvValues(options: { [key: string]: any }, envData: EnvName[]
 export function readFiles(options: {
   dirPath: string;
   stream?: boolean;
-}): Array<{ filePath: string; stream: ReadStream | null; key: string }> {
+}): { filePath: string; stream: ReadStream | null; key: string }[] {
   const startLen = options.dirPath.length + 1;
   const fileList: string[] = [];
   const fn = (p: string) => {
@@ -127,7 +127,7 @@ export function readFiles(options: {
   }));
 }
 
-export async function uploadFiles(schema: DeployBuilderSchema, promises: Array<() => Promise<void>>): Promise<any> {
+export async function uploadFiles(schema: DeployBuilderSchema, promises: (() => Promise<void>)[]): Promise<any> {
   if (!schema.oneByOneUpload) {
     return Promise.all(promises.map(fn => fn()));
   }
@@ -159,7 +159,7 @@ export async function input(message: string): Promise<string> {
   return ok;
 }
 
-export async function list(message: string, choices: Array<{ name: string; value: any }>): Promise<string> {
+export async function list(message: string, choices: { name: string; value: any }[]): Promise<string> {
   const { default: inquirer } = await loadEsmModule<typeof import('inquirer')>('inquirer');
   const { ok } = await inquirer.prompt<{ ok: any }>([
     {
@@ -172,7 +172,7 @@ export async function list(message: string, choices: Array<{ name: string; value
   return ok;
 }
 
-export async function confirm(message: string, confirmByDefault: boolean = false): Promise<boolean> {
+export async function confirm(message: string, confirmByDefault = false): Promise<boolean> {
   const { default: inquirer } = await loadEsmModule<typeof import('inquirer')>('inquirer');
   const { ok } = await inquirer.prompt<{ ok: any }>([
     {

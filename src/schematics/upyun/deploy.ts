@@ -17,7 +17,7 @@ function fixConfig(schema: UpyunDeployBuilderSchema, context: BuilderContext) {
   if (!schema.prefix.endsWith('/')) {
     schema.prefix += '/';
   }
-  const logConfog: { [key: string]: any } = {
+  const logConfog: Record<string, any> = {
     outputPath: schema.outputPath,
     name: schema.name,
     operatorName: schema.operatorName,
@@ -38,8 +38,8 @@ async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, 
     return;
   }
   context.logger.info(`    Check that you need to delete ${listResp.files.length} files`);
-  const promises: Array<Promise<any>> = [];
-  for (const item of listResp.files as Array<{ name: string; size: 'N' | 'F' }>) {
+  const promises: Promise<any>[] = [];
+  for (const item of listResp.files as { name: string; size: 'N' | 'F' }[]) {
     promises.push(client.deleteFile(item.name));
   }
   if (promises.length > 0) {

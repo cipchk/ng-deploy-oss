@@ -16,7 +16,7 @@ async function build(schema: DeployBuilderSchema, context: BuilderContext) {
 
   if (schema.buildCommand) {
     context.logger.info(`📦Building via "${schema.buildCommand}"`);
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+
     execSync(schema.buildCommand);
     context.logger.info(`😍Build Completed`);
     return;

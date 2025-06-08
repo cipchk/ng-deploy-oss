@@ -21,7 +21,7 @@ function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
   if (schema.prefix.length > 0 && !schema.prefix.endsWith('/')) {
     schema.prefix += '/';
   }
-  const logConfog: { [key: string]: any } = {
+  const logConfog: Record<string, any> = {
     outputPath: schema.outputPath,
     region: schema.region,
     ak: schema.ak,
@@ -44,7 +44,7 @@ async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext,
     return;
   }
   context.logger.info(`    Check that you need to delete ${resp.objects.length} files`);
-  const promises: Array<Promise<any>> = [];
+  const promises: Promise<any>[] = [];
   for (const item of resp.objects) {
     promises.push(client.delete(item.name));
   }
