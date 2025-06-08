@@ -74,7 +74,7 @@ Promise.all([buildLibrary()])
     return copy(destPath, testProjectPath);
   })
   .then(() => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+
     const command = `cd dist & npm publish --access public --ignore-scripts`;
     if (RELEASE) {
       console.log('Release Mode');

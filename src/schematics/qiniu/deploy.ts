@@ -18,7 +18,7 @@ function fixConfig(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
   if (schema.prefix.length > 0 && !schema.prefix.endsWith('/')) {
     schema.prefix += '/';
   }
-  const logConfog: { [key: string]: any } = {
+  const logConfog: Record<string, any> = {
     outputPath: schema.outputPath,
     ak: schema.ak,
     sk: schema.sk,
@@ -61,9 +61,9 @@ async function clear(
     return;
   }
   context.logger.info(`    Check that you need to delete ${items.length} files`);
-  const promises: Array<Promise<void>> = [];
+  const promises: Promise<void>[] = [];
   for (const item of items) {
-    const p: Promise<void> = new Promise((itemReslove, itemReject) => {
+    const p = new Promise<void>((itemReslove, itemReject) => {
       bucketManager.delete(schema.bucket, item.key, (err, respBody, respInfo) => {
         if (err) {
           itemReject(err);
