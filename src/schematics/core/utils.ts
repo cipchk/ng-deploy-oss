@@ -1,5 +1,4 @@
 import { Tree, SchematicsException } from '@angular-devkit/schematics';
-// import { addPackageJsonDependency, NodeDependencyType } from 'schematics-utilities';
 import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
 import { join } from 'path';
 import { PluginOptions, EnvName, DeployBuilderSchema } from './types';
