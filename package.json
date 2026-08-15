@@ -1,6 +1,6 @@
 {
   "name": "ng-deploy-oss",
-  "version": "21.0.0",
+  "version": "22.0.0",
   "description": "Deploy Angular apps to aliyun OSS, qiniu, upyun using the Angular CLI.",
   "keywords": [
     "schematics",
@@ -30,52 +30,48 @@
     "save": "devDependencies"
   },
   "scripts": {
-    "test": "jest --watch",
-    "test:ci": "jest",
-    "lint": "eslint . --ignore-pattern 'dist/**' --ignore-pattern '.yarn/**'",
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "lint": "eslint .",
     "build": "tsx scripts/build.ts",
     "build:test": "npm run build -- --test",
     "release": "npm run build -- --release"
   },
   "dependencies": {
-    "@angular-devkit/architect": "^0.2100.0",
-    "@angular-devkit/build-angular": "21.0.0",
-    "@angular-devkit/core": "^21.0.0",
-    "@angular-devkit/schematics": "^21.0.0",
+    "@angular-devkit/architect": "^0.2200.0",
+    "@angular-devkit/core": "^22.0.0",
+    "@angular-devkit/schematics": "^22.0.0",
+    "@angular/build": "^22.1.4",
     "ali-oss": "^6.23.0",
     "chalk": "^5.6.2",
     "fs-extra": "^11.3.2",
     "inquirer": "^13.0.1",
     "inquirer-autocomplete-prompt": "^3.0.1",
+    "jsonc-parser": "^3.2.0",
     "qiniu": "^7.14.0",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.2",
     "upyun": "^3.4.6"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@schematics/angular": "^21.0.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/markdown": "^8.0.3",
+    "@schematics/angular": "^22.0.0",
     "@types/ali-oss": "^6.16.13",
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^9.0.9",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
-    "@types/rimraf": "^4.0.5",
     "@types/upyun": "^3.4.3",
-    "eslint": "^9.39.1",
-    "jest": "^30.2.0",
-    "prettier": "^3.6.2",
+    "@vitest/coverage-v8": "^4.1.10",
+    "eslint": "^10.8.1",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-jsdoc": "^64.2.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
-    "ts-jest": "^29.4.5",
     "tsx": "^4.20.6",
-    "typescript-eslint": "^8.48.0"
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.10"
   },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    }
-  },
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "pnpm@11.21.0"
 }

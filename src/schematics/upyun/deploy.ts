@@ -1,5 +1,7 @@
 import { BuilderContext } from '@angular-devkit/architect';
+
 import upyun from 'upyun';
+
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
 import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
@@ -11,7 +13,7 @@ interface UpyunDeployBuilderSchema extends DeployBuilderSchema {
   prefix: string;
 }
 
-function fixConfig(schema: UpyunDeployBuilderSchema, context: BuilderContext) {
+function fixConfig(schema: UpyunDeployBuilderSchema, context: BuilderContext): void {
   fixEnvValues(schema, ENV_NAMES);
   schema.prefix = schema.prefix || '/';
   if (!schema.prefix.endsWith('/')) {
@@ -38,8 +40,8 @@ async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, 
     return;
   }
   context.logger.info(`    Check that you need to delete ${listResp.files.length} files`);
-  const promises: Promise<any>[] = [];
-  for (const item of listResp.files as { name: string; size: 'N' | 'F' }[]) {
+  const promises: Array<Promise<any>> = [];
+  for (const item of listResp.files as Array<{ name: string; size: 'N' | 'F' }>) {
     promises.push(client.deleteFile(item.name));
   }
   if (promises.length > 0) {
@@ -48,7 +50,7 @@ async function clear(schema: UpyunDeployBuilderSchema, context: BuilderContext, 
   }
 }
 
-async function upload(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any) {
+async function upload(schema: UpyunDeployBuilderSchema, context: BuilderContext, client: any): Promise<void> {
   const list = readFiles({ dirPath: schema.outputPath, stream: true });
   const promises = list.map(item => {
     return () => {
@@ -62,7 +64,7 @@ async function upload(schema: UpyunDeployBuilderSchema, context: BuilderContext,
   context.logger.info(`✅ Complete all uploads`);
 }
 
-export async function ngDeployUpyun(schema: UpyunDeployBuilderSchema, context: BuilderContext) {
+export async function ngDeployUpyun(schema: UpyunDeployBuilderSchema, context: BuilderContext): Promise<void> {
   fixConfig(schema, context);
 
   const service = new upyun.Service(schema.name, schema.operatorName, schema.operatorPwd);

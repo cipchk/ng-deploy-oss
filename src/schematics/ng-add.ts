@@ -1,10 +1,12 @@
 import { chain, Rule, SchematicContext, Tree, SchematicsException } from '@angular-devkit/schematics';
+
+import { join } from 'path';
+
+import { ngAddOSS } from './ali-oss/ng-add';
 import { NgAddOptions, PluginOptions } from './core/types';
 import { getProject } from './core/utils';
 import { ngAddQiniu } from './qiniu/ng-add';
 import { ngAddUpyun } from './upyun/ng-add';
-import { ngAddOSS } from './ali-oss/ng-add';
-import { join } from 'path';
 
 export const ngAdd = (options: NgAddOptions): Rule => {
   return (tree: Tree, context: SchematicContext) => {

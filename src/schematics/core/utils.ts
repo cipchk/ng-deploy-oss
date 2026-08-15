@@ -1,10 +1,12 @@
 import { Tree, SchematicsException } from '@angular-devkit/schematics';
+
 import { readdirSync, statSync, createReadStream, ReadStream } from 'fs-extra';
+import { parse } from 'jsonc-parser';
 import { join } from 'path';
-import { PluginOptions, EnvName, DeployBuilderSchema } from './types';
+
 import { MESSAGES } from './config';
 import { loadEsmModule } from './load-esm';
-import { parse } from 'jsonc-parser';
+import { PluginOptions, EnvName, DeployBuilderSchema } from './types';
 
 export function getPath(tree: Tree): string {
   const possibleFiles = ['/angular.json', '/.angular.json'];
@@ -21,7 +23,7 @@ export function getWorkspace(tree: Tree): any {
   return parse(configBuffer.toString());
 }
 
-export function getProject(tree: Tree, projectName: string) {
+export function getProject(tree: Tree, projectName: string): { name: string; workspace: any; outputPath: string } {
   const workspace = getWorkspace(tree);
   const projectNames = Object.keys(workspace.projects);
   const name = projectName! || (projectNames.length > 0 ? projectNames[0] : null);
@@ -53,7 +55,11 @@ export function getProject(tree: Tree, projectName: string) {
   return { name, workspace, outputPath: project.architect.build.options.outputPath };
 }
 
-export async function addDeployArchitect(tree: Tree, options: PluginOptions, deployOptions: Record<string, any>) {
+export async function addDeployArchitect(
+  tree: Tree,
+  options: PluginOptions,
+  deployOptions: Record<string, any>
+): Promise<void> {
   deployOptions = {
     outputPath: options.outputPath,
     type: options.ngAdd.type,
@@ -78,17 +84,17 @@ export async function addDeployArchitect(tree: Tree, options: PluginOptions, dep
   // addPackageJsonDependency(tree, { type: NodeDependencyType.Dev, version: 'VERSIONPLACEHOLDER', name: 'ng-deploy-oss' });
 }
 
-export function fixAdditionalProperties(options: Record<string, any>) {
+export function fixAdditionalProperties(options: Record<string, any>): void {
   if (!Array.isArray(options['--'])) return;
   options['--']
     .filter(w => w.startsWith('--'))
     .forEach(optStr => {
-      const arr = optStr.substr(2).split('=');
+      const arr = optStr.slice(2).split('=');
       options[arr[0]] = arr[1];
     });
 }
 
-export function fixEnvValues(options: Record<string, any>, envData: EnvName[]) {
+export function fixEnvValues(options: Record<string, any>, envData: EnvName[]): void {
   for (const envItem of envData) {
     const envValue = process.env[envItem.key];
     if (envValue != null) {
@@ -100,10 +106,10 @@ export function fixEnvValues(options: Record<string, any>, envData: EnvName[]) {
 export function readFiles(options: {
   dirPath: string;
   stream?: boolean;
-}): { filePath: string; stream: ReadStream | null; key: string }[] {
+}): Array<{ filePath: string; stream: ReadStream | null; key: string }> {
   const startLen = options.dirPath.length + 1;
   const fileList: string[] = [];
-  const fn = (p: string) => {
+  const fn = (p: string): void => {
     readdirSync(p).forEach(filePath => {
       const fullPath = join(p, filePath);
       if (statSync(fullPath).isDirectory()) {
@@ -122,11 +128,11 @@ export function readFiles(options: {
     filePath: fullPath,
     stream: options.stream === true ? createReadStream(fullPath) : null,
     // 修复 window 下的分隔符会引起 %5C
-    key: fullPath.substr(startLen).replace(/\\/g, '/')
+    key: fullPath.slice(startLen).replace(/\\/g, '/')
   }));
 }
 
-export async function uploadFiles(schema: DeployBuilderSchema, promises: (() => Promise<void>)[]): Promise<any> {
+export async function uploadFiles(schema: DeployBuilderSchema, promises: Array<() => Promise<void>>): Promise<any> {
   if (!schema.oneByOneUpload) {
     return Promise.all(promises.map(fn => fn()));
   }
@@ -140,7 +146,7 @@ export function normalizePath(...args: string[]): string {
   return args
     .map((val, idx) => {
       if (idx <= 0) return val;
-      if (val.startsWith('/')) return val.substr(1);
+      if (val.startsWith('/')) return val.slice(1);
       return val;
     })
     .join('/');
@@ -158,7 +164,7 @@ export async function input(message: string): Promise<string> {
   return ok;
 }
 
-export async function list(message: string, choices: { name: string; value: any }[]): Promise<string> {
+export async function list(message: string, choices: Array<{ name: string; value: any }>): Promise<string> {
   const { default: inquirer } = await loadEsmModule<typeof import('inquirer')>('inquirer');
   const { ok } = await inquirer.prompt<{ ok: any }>([
     {
