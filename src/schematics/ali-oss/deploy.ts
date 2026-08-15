@@ -1,5 +1,7 @@
 import { BuilderContext } from '@angular-devkit/architect';
+
 import OSS from 'ali-oss';
+
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
 import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
@@ -15,7 +17,7 @@ interface AliOSSDeployBuilderSchema extends DeployBuilderSchema {
 // 30分钟
 const TIMEOUT = 1000 * 60 * 30;
 
-function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
+function fixConfig(schema: AliOSSDeployBuilderSchema, context: BuilderContext): void {
   fixEnvValues(schema, ENV_NAMES);
   schema.prefix = schema.prefix || '';
   if (schema.prefix.length > 0 && !schema.prefix.endsWith('/')) {
@@ -44,7 +46,7 @@ async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext,
     return;
   }
   context.logger.info(`    Check that you need to delete ${resp.objects.length} files`);
-  const promises: Promise<any>[] = [];
+  const promises: Array<Promise<any>> = [];
   for (const item of resp.objects) {
     promises.push(client.delete(item.name));
   }
@@ -54,7 +56,7 @@ async function clear(schema: AliOSSDeployBuilderSchema, context: BuilderContext,
   }
 }
 
-async function upload(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS) {
+async function upload(schema: AliOSSDeployBuilderSchema, context: BuilderContext, client: OSS): Promise<void> {
   const list = readFiles({ dirPath: schema.outputPath, stream: true });
   const promises = list.map(item => {
     return () => {
@@ -68,7 +70,7 @@ async function upload(schema: AliOSSDeployBuilderSchema, context: BuilderContext
   context.logger.info(`✅ Complete all uploads`);
 }
 
-export async function ngDeployAliOSS(schema: AliOSSDeployBuilderSchema, context: BuilderContext) {
+export async function ngDeployAliOSS(schema: AliOSSDeployBuilderSchema, context: BuilderContext): Promise<void> {
   fixConfig(schema, context);
 
   const client = new OSS({

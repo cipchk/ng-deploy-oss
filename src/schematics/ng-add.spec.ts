@@ -1,9 +1,11 @@
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
-import { Schema as ApplicationOptions } from '@schematics/angular/application/schema';
-// import { Tree } from '@angular-devkit/schematics';
 
-const collectionPath = require.resolve('../collection.json');
+import { Schema as ApplicationOptions } from '@schematics/angular/application/schema';
+import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
+import { fileURLToPath } from 'url';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+const collectionPath = fileURLToPath(new URL('../collection.json', import.meta.url));
 const workspaceOptions: WorkspaceOptions = {
   name: 'workspace',
   newProjectRoot: 'tests',
@@ -18,7 +20,7 @@ describe('ng add ng-deploy-oss', () => {
     const appTree = await testRunner.runExternalSchematic('@schematics/angular', 'workspace', workspaceOptions);
     tree = await testRunner.runExternalSchematic('@schematics/angular', 'application', appOptions, appTree);
   });
-  xdescribe('ng add', () => {
+  describe.skip('ng add', () => {
     it('should be working', async () => {
       tree = await testRunner.runSchematic('ng-add', {}, tree);
       const angularJson = JSON.parse(tree.readContent('/angular.json'));

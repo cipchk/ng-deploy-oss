@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": "tsconfig",
-    "lib": ["es2018", "dom"],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -20,10 +23,19 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "target": "es6",
-    "types": ["jest", "node"],
+    "types": [
+      "node"
+    ],
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts", "src/*/files/**/*", "**/__mocks__/*", "**/__tests__/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "src/*/files/**/*",
+    "**/__mocks__/*",
+    "**/__tests__/*"
+  ]
 }

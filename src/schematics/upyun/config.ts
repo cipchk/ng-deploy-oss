@@ -5,5 +5,5 @@ export const ENV_NAMES: EnvName[] = [
   { key: 'UPYUN_OPERATORNAME', name: 'operatorName' },
   { key: 'UPYUN_OPERATORPWD', name: 'operatorPwd' },
   { key: 'UPYUN_PREFIX', name: 'prefix' },
-  { key: 'UPYUN_BUILDCOMMAND', name: 'buildCommand' },
+  { key: 'UPYUN_BUILDCOMMAND', name: 'buildCommand' }
 ];

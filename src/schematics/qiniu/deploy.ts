@@ -1,5 +1,7 @@
 import { BuilderContext } from '@angular-devkit/architect';
+
 import * as qiniu from 'qiniu';
+
 import { ENV_NAMES } from './config';
 import { DeployBuilderSchema } from '../core/types';
 import { fixEnvValues, readFiles, uploadFiles } from '../core/utils';
@@ -12,7 +14,7 @@ interface QiniuDeployBuilderSchema extends DeployBuilderSchema {
   prefix: string;
 }
 
-function fixConfig(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
+function fixConfig(schema: QiniuDeployBuilderSchema, context: BuilderContext): void {
   fixEnvValues(schema, ENV_NAMES);
   schema.prefix = schema.prefix || '';
   if (schema.prefix.length > 0 && !schema.prefix.endsWith('/')) {
@@ -32,7 +34,7 @@ function fixConfig(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
   });
 }
 
-async function listPrefix(schema: QiniuDeployBuilderSchema, bucketManager: qiniu.rs.BucketManager) {
+async function listPrefix(schema: QiniuDeployBuilderSchema, bucketManager: qiniu.rs.BucketManager): Promise<any> {
   return new Promise((reslove, reject) => {
     bucketManager.listPrefix(schema.bucket, { prefix: schema.prefix, limit: 999999 }, (err, respBody, respInfo) => {
       if (err) {
@@ -61,7 +63,7 @@ async function clear(
     return;
   }
   context.logger.info(`    Check that you need to delete ${items.length} files`);
-  const promises: Promise<void>[] = [];
+  const promises: Array<Promise<void>> = [];
   for (const item of items) {
     const p = new Promise<void>((itemReslove, itemReject) => {
       bucketManager.delete(schema.bucket, item.key, (err, respBody, respInfo) => {
@@ -85,7 +87,7 @@ async function clear(
   }
 }
 
-export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: BuilderContext) {
+export async function ngDeployQiniu(schema: QiniuDeployBuilderSchema, context: BuilderContext): Promise<void> {
   fixConfig(schema, context);
 
   const mac = new qiniu.auth.digest.Mac(schema.ak, schema.sk);

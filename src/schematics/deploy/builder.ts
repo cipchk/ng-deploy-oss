@@ -1,13 +1,15 @@
 import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
 import { json } from '@angular-devkit/core';
+
+import { execSync } from 'child_process';
+
+import { ngDeployAliOSS } from '../ali-oss/deploy';
 import { DeployBuilderSchema } from '../core/types';
 import { fixAdditionalProperties } from '../core/utils';
 import { ngDeployQiniu } from '../qiniu/deploy';
 import { ngDeployUpyun } from '../upyun/deploy';
-import { ngDeployAliOSS } from '../ali-oss/deploy';
-import { execSync } from 'child_process';
 
-async function build(schema: DeployBuilderSchema, context: BuilderContext) {
+async function build(schema: DeployBuilderSchema, context: BuilderContext): Promise<BuilderOutput | void> {
   context.logger.info(`🥶Executing ${schema.type} deploy...`);
   if (schema.noBuild) {
     context.logger.info(`😀Skipping build`);

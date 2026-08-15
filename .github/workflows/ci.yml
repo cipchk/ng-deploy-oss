@@ -1,29 +1,70 @@
-name: CI
+name: Ci
 
 on: push
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v7
 
-      - uses: borales/actions-yarn@v4
+      - uses: pnpm/action-setup@v6
         with:
-          cmd: install
+          run_install: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: build
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: build
+        run: pnpm run build
 
-      - name: lint
-        uses: borales/actions-yarn@v4
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
         with:
-          cmd: lint
+          run_install: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: test
-        uses: borales/actions-yarn@v4
+        run: pnpm run test:ci
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
         with:
-          cmd: test:ci
+          run_install: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: lint
+        run: pnpm run lint

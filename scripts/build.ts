@@ -1,40 +1,38 @@
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
 import { copy, copySync, writeFile, existsSync, readFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
-import { execSync } from 'child_process';
-
 import * as rimraf from 'rimraf';
 
 const TEST = process.argv.includes('--test');
 const RELEASE = process.argv.includes('--release');
 const RELEASE_NEXT = process.argv.includes('--release-next');
-const src = (...args: string[]) => join(process.cwd(), 'src', ...args);
-const dest = (...args: string[]) => join(process.cwd(), 'dist', ...args);
+const src = (...args: string[]): string => join(process.cwd(), 'src', ...args);
+const dest = (...args: string[]): string => join(process.cwd(), 'dist', ...args);
 const destPath = dest('');
 
-function spawnPromise(command: string, args: string[]) {
+function spawnPromise(command: string, args: string[]): Promise<unknown> {
   return new Promise(resolve => spawn(command, args, { stdio: 'inherit' }).on('close', resolve));
 }
 
-async function fixPackage() {
+async function fixPackage(): Promise<void> {
   const path = dest('package.json');
-  const pkg = await import(path);
-  ['scripts', 'devDependencies', 'jest', 'husky'].forEach(key => delete pkg[key]);
+  const pkg = JSON.parse(readFileSync(path, { encoding: 'utf8' })) as Record<string, any>;
+  ['scripts', 'devDependencies', 'jest', 'husky', 'packageManager'].forEach(key => delete pkg[key]);
   // pkg.dependencies['@angular-devkit/architect'] = `^0.1100.0 || ^0.1200.0 || ^0.1300.0`;
   // ['@angular-devkit/core', '@angular-devkit/schematics'].forEach(name => {
   //   pkg.dependencies[name] = `^11.0.0 || ^12.0.0 || ^13.0.0`;
   // });
-  const rootPackage = await import(dest('../package.json'));
+  const rootPackage = JSON.parse(readFileSync(dest('../package.json'), { encoding: 'utf8' })) as Record<string, any>;
   ['@angular-devkit/architect', '@angular-devkit/core', '@angular-devkit/schematics'].forEach(key => {
     pkg.dependencies[key] = rootPackage.dependencies[key];
   });
   return writeFile(path, JSON.stringify(pkg, null, 2));
 }
 
-async function compileSchematics() {
+async function compileSchematics(): Promise<void> {
   const tsc = ['tsc', '-p', 'tsconfig.json'];
   await spawnPromise(`npx`, tsc);
-  return Promise.all([
+  await Promise.all([
     copy(src('builders.json'), dest('builders.json')),
     copy(src('collection.json'), dest('collection.json')),
     copy(src('schematics', 'schema.json'), dest('schematics', 'schema.json')),
@@ -42,14 +40,14 @@ async function compileSchematics() {
   ]);
 }
 
-async function replaceVersionNumber() {
+async function replaceVersionNumber(): Promise<void> {
   const pkg = await import(join(process.cwd(), 'package.json'));
   const utilsPath = dest('schematics', 'core', 'utils.js');
   const content = readFileSync(utilsPath, { encoding: 'utf8' }).replace(`VERSIONPLACEHOLDER`, `~${pkg.version}`);
   writeFileSync(utilsPath, content);
 }
 
-async function buildLibrary() {
+async function buildLibrary(): Promise<void> {
   if (existsSync(destPath)) {
     rimraf.sync(destPath);
   }
@@ -74,7 +72,6 @@ Promise.all([buildLibrary()])
     return copy(destPath, testProjectPath);
   })
   .then(() => {
-
     const command = `cd dist & npm publish --access public --ignore-scripts`;
     if (RELEASE) {
       console.log('Release Mode');

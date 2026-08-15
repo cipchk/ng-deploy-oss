@@ -1,25 +1,11 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-  "files.watcherExclude": {
-    "**/.git/objects/**": true,
-    "**/.git/subtree-cache/**": true,
-    "**/node_modules/*/**": true,
-    "**/dist/*/**": true,
-    "**/coverage/*/**": true
-  },
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.fixAll.tslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
-  "[markdown]": {
-    "editor.formatOnSave": false
-  },
-  "files.associations": {
-    "package.json": "json",
-    "*.json": "jsonc",
-    ".prettierrc": "json",
-    ".stylelintrc": "json"
+  "[json][jsonc][yaml][javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
